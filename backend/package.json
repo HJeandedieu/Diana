@@ -5,9 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "dev": "nodemon --exec tsx src/index.js",
-  "start": "tsx src/index.js"
-},
+    "dev": "nodemon --exec tsx src/index.js",
+    "start": "tsx src/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
