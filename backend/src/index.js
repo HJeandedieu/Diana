@@ -1,17 +1,19 @@
-import 'dotenv/config'
-import express from "express"
-import prisma from './lib/prisma.js'
+import "dotenv/config";
+import express from "express";
+import prisma from "./lib/prisma.js";
+import authRouter from "./routes/auth.routes.js";
 
 const app = express();
 
-app.get("/", (req,res) => {
-    res.send("You have reached Diana API");
-})
+app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 
-app.listen(process.env.PORT, ()=>{
-    console.log(`Diana API running on localhost:${process.env.PORT}`)
-})
+app.use("/api/auth", authRouter);
 
-prisma.user.findMany()
-  .then(users => console.log('DB connected. Users:', users))
-  .catch(err => console.error('DB connection failed:', err))
+app.get("/", (req, res) => {
+  res.send("You have reached Diana API");
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Diana API running on localhost:${process.env.PORT}`);
+});
