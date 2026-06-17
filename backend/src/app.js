@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import prisma from "./lib/prisma.js";
 import authRouter from "./routes/auth.routes.js";
-import sessionRouter from "./routes/sessions.routes.js";
+import sessionRouter from "./routes/session.routes.js";
 import chatRouter from "./routes/chat.routes.js";
 import memoriesRouter from "./routes/memories.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
