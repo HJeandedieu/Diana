@@ -1,5 +1,10 @@
 import { Router } from "express";
+import authenticate from "../middleware/auth.middleware.js";
 
-const chatsRouter = Router();
+const chatRouter = Router();
 
-export default chatsRouter;
+chatRouter.post("/", authenticate, (req, res) => {
+  res.send("Chat loading...");
+});
+
+export default chatRouter;

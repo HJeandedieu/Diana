@@ -19,7 +19,7 @@ export const createAccount = async ({ email, password }) => {
 
   const existingUser = await prisma.user.findUnique({
     where: {
-      email: email
+      email: email,
     },
   });
 
