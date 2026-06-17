@@ -5,6 +5,7 @@ import authRouter from "./routes/auth.routes.js";
 import sessionsRouter from "./routes/sessions.routes.js";
 import chatsRouter from "./routes/chat.routes.js";
 import memoriesRouter from "./routes/memories.routes.js";
+import errorHandler from "./middleware/error.middleware.js";
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use("/api/auth", authRouter);
 app.use("/sessions", sessionsRouter);
 app.use("/chat", chatsRouter);
 app.use("/memories", memoriesRouter);
+
+app.use(errorHandler);
 
 
 app.get("/", (req, res) => {
