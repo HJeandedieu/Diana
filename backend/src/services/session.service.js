@@ -1,79 +1,48 @@
 import prisma from "../lib/prisma.js";
 import { AppError, NotFoundError } from "../utils/error.js";
 
-export const createNewSession = async ({userId, title}) => {
-    // check if user exist
-    const user = await prisma.user.findUnique({
-        where:{
-            id: userId
-        }
-    })
+export const createNewSession = async ({ userId, title }) => {
+  const newSession = await prisma.session.create({
+    data: {
+      title: title,
+      connect: {
+        id: userId,
+      },
+    },
+  });
 
-    if(!user){
-        const error = new NotFoundError("User not found.", 404);
-        throw error;
-    }
+  return newSession;
+};
 
-    const newSession = await prisma.session.create({
-        data:{
-            title:title,
-            userId:{
-                connect:{
-                    id: userId
-                }
-            }
-        },
-    })
+export const getUserSessions = async ({ userId }) => {
+  const sessions = await prisma.session.findMany({
+    where: {
+      userId: userId,
+    },
+  });
 
-    return newSession;
-}
+  return sessions;
+};
 
-export const getUserSessions = async ({userId}) => {
-    const user = await prisma.user.findUnique({
-        where:{
-            id: userId
-        }
-    });
+export const getSessionMessages = async ({ userId, sessionId }) => {
+  const session = await prisma.session.findFirst({
+    where: {
+      id: sessionId,
+      userId: userId,
+    },
+  });
 
-    if(!user){
-        const error = new NotFoundError("User not found", 404);
-        throw error;
-    }
+  if (!session) {
+    throw new NotFoundError("Session not found");
+  }
 
-    const sessions = await prisma.session.findMany({
-        where:{
-            userId:userId
-        }
-    })
+  const messages = await prisma.message.findMany({
+    where: {
+      session: {
+        userId: userId,
+      },
+    },
+  });
 
-    return sessions;
-}
-
-export const getSessionMessages = async ({userId, sessionId}) => {
-    const user = await prisma.user.findUnique({
-        where:{
-            id: userId
-        }
-    });
-
-    if(!user){
-        const error = new NotFoundError("User not found", 404);
-        throw error;
-    }
-
-    const session = await prisma.session.findUnique({
-        where:{
-            id:sessionId
-        }
-    })
-
-    const messages = await prisma.message.findMany({
-        where: {
-            session:{
-                userId: userId
-            }
-        }
-    })
-
-    return messages;
-}
+  return messages;
+};
