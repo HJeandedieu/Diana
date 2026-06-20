@@ -1,0 +1,439 @@
+{
+  "info": {
+    "name": "Diana - Week 2 Test Collection",
+    "description": "Tests auth, sessions, chat, and ownership boundaries for Diana's backend.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "tokenA", "value": "" },
+    { "key": "tokenB", "value": "" },
+    { "key": "sessionId", "value": "" },
+    { "key": "emailA", "value": "" },
+    { "key": "emailB", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Register User A",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const stamp = Date.now();",
+              "pm.collectionVariables.set('emailA', `usera_${stamp}@test.com`);",
+              "pm.collectionVariables.set('emailB', `userb_${stamp}@test.com`);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('tokenA', data.data.token);",
+              "pm.test('Token returned', () => pm.expect(data.data.token).to.be.a('string'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{emailA}}\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+      }
+    },
+    {
+      "name": "2. Login User A",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('tokenA', data.data.token);",
+              "pm.test('Token returned', () => pm.expect(data.data.token).to.be.a('string'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{emailA}}\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      }
+    },
+    {
+      "name": "3. Create Session (User A)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('sessionId', data.data.id);",
+              "pm.test('Session id returned', () => pm.expect(data.data.id).to.be.a('string'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenA}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Test Session\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+      }
+    },
+    {
+      "name": "4. Get All Sessions (User A)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json();",
+              "pm.test('Returns an array', () => pm.expect(data.data).to.be.an('array'));",
+              "pm.test('Contains created session', () => {",
+              "  const ids = data.data.map(s => s.id);",
+              "  pm.expect(ids).to.include(pm.collectionVariables.get('sessionId'));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenA}}" }],
+        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+      }
+    },
+    {
+      "name": "5. Send Chat Message (User A)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json();",
+              "pm.test('Response data present', () => pm.expect(data.data).to.exist);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenA}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"message\": \"Hello Diana, this is a test message\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+      }
+    },
+    {
+      "name": "6. Get Session Messages (User A)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json();",
+              "pm.test('Returns an array', () => pm.expect(data.data).to.be.an('array'));",
+              "pm.test('Contains at least 2 messages', () => pm.expect(data.data.length).to.be.at.least(2));",
+              "pm.test('Has a user message', () => {",
+              "  pm.expect(data.data.some(m => m.role === 'user')).to.be.true;",
+              "});",
+              "pm.test('Has an assistant message', () => {",
+              "  pm.expect(data.data.some(m => m.role === 'assistant')).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenA}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/{{sessionId}}/messages",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions", "{{sessionId}}", "messages"]
+        }
+      }
+    },
+    {
+      "name": "6b. Create Second Session (User A)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+              "const data = pm.response.json();",
+              "pm.test('Session id returned', () => pm.expect(data.data.id).to.be.a('string'));",
+              "pm.test('Different from first session', () => {",
+              "  pm.expect(data.data.id).to.not.equal(pm.collectionVariables.get('sessionId'));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenA}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Second Test Session\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+      }
+    },
+    {
+      "name": "6c. Get All Sessions Returns Both",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json();",
+              "pm.test('Contains at least 2 sessions', () => pm.expect(data.data.length).to.be.at.least(2));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenA}}" }],
+        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+      }
+    },
+    {
+      "name": "7. No Token - Should Fail",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+      }
+    },
+    {
+      "name": "8. Register User B",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('tokenB', data.data.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{emailB}}\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+      }
+    },
+    {
+      "name": "9. Login User B",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('tokenB', data.data.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{emailB}}\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      }
+    },
+    {
+      "name": "10. Ownership Violation - User B reads User A's messages",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404 (not the other users data)', () => pm.response.to.have.status(404));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenB}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/{{sessionId}}/messages",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions", "{{sessionId}}", "messages"]
+        }
+      }
+    },
+    {
+      "name": "10b. Nonexistent Session - Get Messages Should 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404', () => pm.response.to.have.status(404));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenA}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/00000000-0000-0000-0000-000000000000/messages",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions", "00000000-0000-0000-0000-000000000000", "messages"]
+        }
+      }
+    },
+    {
+      "name": "10c. Ownership Violation - User B sends chat into User A's session",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404 (cannot chat into someone elses session)', () => pm.response.to.have.status(404));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenB}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"message\": \"trying to hijack this session\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+      }
+    },
+    {
+      "name": "11. Invalid Session ID - Should 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404', () => pm.response.to.have.status(404));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenA}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"00000000-0000-0000-0000-000000000000\",\n  \"message\": \"test\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+      }
+    },
+    {
+      "name": "12. Empty Message - Should 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenA}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"message\": \"\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+      }
+    }
+  ]
+}

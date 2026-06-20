@@ -5,9 +5,11 @@ export const createNewSession = async ({ userId, title }) => {
   const newSession = await prisma.session.create({
     data: {
       title: title,
-      connect: {
-        id: userId,
-      },
+      user:{
+        connect:{
+          id:userId
+        }
+      }
     },
   });
 

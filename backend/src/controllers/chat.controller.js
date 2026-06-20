@@ -6,7 +6,7 @@ const getMessage = async (req, res, next) => {
     const { sessionId, message } = req.body;
     const response = await fetchChatResponse({ userId, sessionId, message });
 
-    res.status(200).json({ success: true, message: response });
+    res.status(200).json({ success: true, data: response });
   } catch (error) {
     next(error);
   }
