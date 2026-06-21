@@ -1,369 +1,114 @@
-# Diana
+<div align="center">
 
-> A loyal AI companion originally created during a lunar research initiative, now dedicated to supporting developers with deep memory, thoughtful guidance, and expert coding assistance.
+# 🌙 Diana
 
----
+**The AI companion that remembers.**
 
-## Overview
+*A memory-aware assistant built for developers who are tired of re-explaining everything, every time.*
 
-Diana is an AI companion designed to help developers learn, build, and grow. Unlike traditional chatbots that treat every conversation as a fresh start, Diana maintains context, remembers important information, and provides personalized support throughout a developer's journey.
+[![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
+![Status](https://img.shields.io/badge/status-in--development-blueviolet)
+![Built for](https://img.shields.io/badge/built%20for-Stardance%20Challenge-1a1a2e)
 
-The platform combines a modern web interface, a scalable backend, and a dedicated AI reasoning service to deliver intelligent conversations, memory management, and software development assistance.
-
----
-
-## Problem
-
-Developers often spend significant time re-explaining projects, searching for previous solutions, and rebuilding context across sessions. Most AI assistants provide powerful responses but lack continuity and long-term understanding of a user's work.
-
-Diana addresses this problem by combining:
-
-- Persistent memory
-- Context-aware conversations
-- Development assistance
-- Personalized guidance
-- Long-term project awareness
+</div>
 
 ---
 
-## Features
+## Why Diana
 
-### Persistent Memory
-Diana stores and retrieves relevant information from previous interactions, enabling more meaningful and productive conversations over time.
+Most AI assistants forget you the second the tab closes. You re-explain your stack, re-paste your code, re-tell the same story about that one bug — every single session.
 
-### Context-Aware Conversations
-Conversations maintain continuity across sessions, allowing Diana to provide responses based on previous discussions and project history.
+**Diana doesn't.**
 
-### Coding Assistance
-Diana helps developers by:
-
-- Explaining programming concepts
-- Debugging code
-- Reviewing implementations
-- Suggesting improvements
-- Assisting with architecture decisions
-
-### Project Guidance
-Provides recommendations for:
-
-- Project planning
-- Software architecture
-- Learning paths
-- Technology selection
-- Best practices
-
-### Scalable Architecture
-Built as a distributed system with dedicated frontend, backend, and AI services.
+She remembers your projects, your decisions, your style — and picks up exactly where you left off. Less context-rebuilding. More building.
 
 ---
 
-## Architecture
+## What She Does
 
-Diana is built using a multi-service architecture.
+| | |
+|---|---|
+| **Persistent Memory** | Retains context across sessions — no more déjà vu conversations |
+| **Context-Aware Chat** | Conversations build on real history, not a blank slate |
+| **Coding Assistant** | Debugs, reviews, explains, and architects alongside you |
+| **Project Guidance** | Helps plan, choose tech, and stay on the best path forward |
+| **Built to Scale** | Distributed architecture designed for real growth |
 
-```text
-┌─────────────┐
-│  Frontend   │
-│   React     │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   Backend   │
-│  ExpressJS  │
-└──────┬──────┘
-       │
- ┌─────┴─────┐
- ▼           ▼
-Database   AI Service
-PostgreSQL  FastAPI
+---
+
+## How She's Built
+
+```
+┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+│   Frontend   │ ───▶ │   Backend    │ ───▶ │  AI Service  │
+│    React     │      │  Express.js  │      │   FastAPI    │
+└──────────────┘      └──────┬───────┘      └──────────────┘
+                              │
+                       ┌──────▼───────┐
+                       │  PostgreSQL  │
+                       └──────────────┘
 ```
 
-### Frontend
-
-The frontend provides the user interface where users interact with Diana through a modern conversational experience.
-
-Responsibilities:
-
-- Chat interface
-- User settings
-- Conversation history
-- Authentication flows
-- API communication
-
-### Backend API
-
-The backend acts as the central coordinator.
-
-Responsibilities:
-
-- User management
-- Authentication
-- Conversation storage
-- Message persistence
-- API orchestration
-- Communication with the AI service
-
-### AI Service
-
-The AI service serves as Diana's reasoning engine.
-
-Responsibilities:
-
-- Prompt processing
-- Response generation
-- Memory retrieval
-- Context management
-- Coding assistance
-- AI-specific business logic
-
-### Database
-
-Stores:
-
-- Users
-- Conversations
-- Messages
-- Settings
-- Memory records
+| Layer | Stack |
+|---|---|
+| **Frontend** | React · TypeScript · CSS Modules |
+| **Backend** | Node.js · Express · Prisma |
+| **AI Service** | Python · FastAPI · OpenAI API |
+| **Database** | PostgreSQL |
+| **Infra** | Docker · Docker Compose |
+| **Auth** | JWT |
 
 ---
 
-## Project Structure
-
-```text
-diana-ai-companion/
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── hooks/
-│   │   ├── types/
-│   │   ├── utils/
-│   │   └── App.tsx
-│   ├── package.json
-│   └── ...
-│
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── middleware/
-│   │   ├── prisma/
-│   │   └── server.ts
-│   ├── prisma/
-│   │   └── schema.prisma
-│   ├── package.json
-│   └── ...
-│
-├── ai-service/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── routers/
-│   │   ├── services/
-│   │   ├── core/
-│   │   └── models/
-│   ├── requirements.txt
-│   └── ...
-│
-├── docker-compose.yml
-├── .env.example
-├── README.md
-└── package.json
-```
-
----
-
-## Tech Stack
-
-### Frontend
-
-- React
-- TypeScript
-- CSS Modules
-
-### Backend
-
-- Node.js
-- Express.js
-- Prisma ORM
-
-### AI Service
-
-- Python
-- FastAPI
-- OpenAI API
-
-### Database
-
-- PostgreSQL
-
-### Infrastructure
-
-- Docker
-- Docker Compose
-
-### Authentication
-
-- JWT Authentication
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- Python 3.11+
-- PostgreSQL
-- Docker (optional)
-
----
-
-### Clone the Repository
+## Quick Start
 
 ```bash
-git clone https://github.com/your-username/diana-ai-companion.git
-
-cd diana-ai-companion
+git clone https://github.com/Hjeandedieu/diana.git
+cd diana
 ```
 
----
-
-### Environment Variables
-
-Create environment files based on the provided examples.
-
-Example:
-
-```env
-DATABASE_URL=
-JWT_SECRET=
-OPENAI_API_KEY=
-```
-
----
-
-### Install Frontend Dependencies
-
-```bash
-cd frontend
-
-npm install
-```
-
-Run the frontend:
-
-```bash
-npm run dev
-```
-
----
-
-### Install Backend Dependencies
-
-```bash
-cd backend
-
-npm install
-```
-
-Run the backend:
-
-```bash
-npm run dev
-```
-
----
-
-### Install AI Service Dependencies
-
-```bash
-cd ai-service
-
-pip install -r requirements.txt
-```
-
-Run the AI service:
-
-```bash
-uvicorn app.main:app --reload
-```
-
----
-
-## Running with Docker
-
-Start all services:
+**One-command launch (recommended):**
 
 ```bash
 docker-compose up --build
 ```
 
-This launches:
+**Or run each service manually:**
 
-- Frontend
-- Backend
-- AI Service
-- PostgreSQL
+```bash
+# Frontend
+cd frontend && npm install && npm run dev
 
----
+# Backend
+cd backend && npm install && npm run dev
 
-## Future Roadmap
+# AI Service
+cd ai-service && pip install -r requirements.txt && uvicorn app.main:app --reload
+```
 
-### Memory Enhancements
+> Requires Node.js 20+, Python 3.11+, PostgreSQL (or Docker to skip all that).
 
-- Long-term memory consolidation
-- Semantic memory retrieval
-- User preference learning
-
-### Developer Tools
-
-- Repository analysis
-- Codebase understanding
-- Automated documentation
-- Intelligent debugging workflows
-
-### Interaction Improvements
-
-- Voice conversations
-- Real-time streaming responses
-- Multi-modal capabilities
-
-### Platform Expansion
-
-- Mobile application
-- Browser extension
-- IDE integrations
+Set up your `.env` files with `DATABASE_URL`, `JWT_SECRET`, and `OPENAI_API_KEY` before launch.
 
 ---
 
-## AI Usage Declaration
+## What's Next
 
-This project was developed with assistance from AI tools. AI was used to support research, generate implementation suggestions, assist with debugging, improve documentation, and provide technical guidance during development. All generated outputs were reviewed, modified, tested, and integrated by the developer. System design decisions, architecture, implementation, and final functionality were directed and validated by the developer.
-
----
-
-## Demo
-
-Live Demo: *Coming Soon*
-
-Video Demonstration: *Coming Soon*
+- Semantic memory retrieval & long-term consolidation
+- Repository & codebase understanding
+- Voice + real-time streaming conversations
+- Mobile app, browser extension, IDE integrations
 
 ---
 
-## Author
+## About This Project
 
-RedBlue
-
-Built for the Stardance Challenge.
+Diana was built solo by **RedBlue** for the **Stardance Challenge**, with AI tools assisting along the way — for research, debugging support, and documentation. Every architectural decision, line of integrated code, and final feature was directed, reviewed, and shipped by the developer.
 
 ---
 
-## License
+<div align="center">
 
-This project is licensed under the MIT License.
+**License:** MIT &nbsp;·&nbsp; **Demo:** Coming Soon &nbsp;·&nbsp; **Author:** [RedBlue](https://github.com/hjeandedieu)
+
+</div>
