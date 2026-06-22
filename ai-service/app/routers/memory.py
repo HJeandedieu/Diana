@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from models.memory import Request, Response, MemoryItem, SummarizeRequest, SummarizeResponse
+from app.models.memory import Request, Response, MemoryItem
+from app.models.chat import SummarizeRequest, SummarizeResponse
 
 
 
@@ -8,8 +9,8 @@ memory_router = APIRouter()
 @memory_router.post("/extract-memory")
 def extract_memory(request: Request):
     return Response(memories=[MemoryItem(
-        type="preference",
-        content="User prefers direct, structured explanations with minimal fluff.",
+        type="Project",
+        content="Initialised new AI chat",
         importance=8
     )])
     
