@@ -1,3 +1,4 @@
+import axios from "axios"
 import prisma from "../lib/prisma.js";
 import { AppError, NotFoundError, BadRequestError } from "../utils/error.js";
 
@@ -26,14 +27,20 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
       content: message,
     },
   });
-  const response = "Diana response coming soon";
+  const aiResponse = await axios.post("http://localhost:8000/generate-response", {
+    message,
+    memories: [],
+    history: []
+  });
+
+  const responseText = aiResponse.data.response
 
   const newResponse = await prisma.message.create({
     data: {
       sessionId: session.id,
       role: "assistant",
-      content: response,
+      content: responseText,
     },
   });
-  return response;
+  return responseText;
 };
