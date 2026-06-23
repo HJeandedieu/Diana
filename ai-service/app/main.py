@@ -1,9 +1,7 @@
-import os
 import uvicorn
 from fastapi import FastAPI
 from app.routers.chat import chat_router
 from app.routers.memory import memory_router
-from dotenv import load_dotenv
 from app.core.config import settings
 
 app = FastAPI()
