@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 import prisma from "../lib/prisma.js";
 import { AppError, NotFoundError, BadRequestError } from "../utils/error.js";
 
@@ -27,13 +27,49 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
       content: message,
     },
   });
-  const aiResponse = await axios.post("http://localhost:8000/generate-response", {
-    message,
-    memories: [],
-    history: []
-  });
+  const aiResponse = await axios.post(
+    "http://localhost:8000/generate-response",
+    {
+      message,
+      memories: [],
+      history: [],
+    },
+  );
 
-  const responseText = aiResponse.data.response
+  const responseText = aiResponse.data.response;
+
+  const conversation = [
+    { role: "user", content: message },
+    { role: "assistant", content: responseText },
+  ];
+
+  const memoriesResponse = await axios.post(
+    "http://localhost:8000/extract-memory",
+    { conversation },
+  );
+  const extractedMemories = memoriesResponse.data;
+
+  for (const memory of extractedMemories) {
+    const existing = await prisma.memory.findFirst({
+      where: { userId, memoryType: memory.type },
+    });
+
+    if (existing) {
+      await prisma.memory.update({
+        where: { id: existing.id },
+        data: { content: memory.content, importance: memory.importance },
+      });
+    } else {
+      await prisma.memory.create({
+        data: {
+          userId,
+          memoryType: memory.type,
+          content: memory.content,
+          importance: memory.importance,
+        },
+      });
+    }
+  }
 
   const newResponse = await prisma.message.create({
     data: {

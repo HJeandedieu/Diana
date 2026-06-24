@@ -5,11 +5,11 @@ export const createNewSession = async ({ userId, title }) => {
   const newSession = await prisma.session.create({
     data: {
       title: title,
-      user:{
-        connect:{
-          id:userId
-        }
-      }
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
     },
   });
 
@@ -40,10 +40,9 @@ export const getSessionMessages = async ({ userId, sessionId }) => {
 
   const messages = await prisma.message.findMany({
     where: {
-      session: {
-        userId: userId,
-      },
+      sessionId: session.id,
     },
+    orderBy: { createdAt: "asc" },
   });
 
   return messages;

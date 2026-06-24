@@ -47,7 +47,11 @@
           "mode": "raw",
           "raw": "{\n  \"email\": \"{{emailA}}\",\n  \"password\": \"password123\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "register"]
+        }
       }
     },
     {
@@ -73,7 +77,11 @@
           "mode": "raw",
           "raw": "{\n  \"email\": \"{{emailA}}\",\n  \"password\": \"password123\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
       }
     },
     {
@@ -102,7 +110,11 @@
           "mode": "raw",
           "raw": "{\n  \"title\": \"Test Session\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+        "url": {
+          "raw": "{{baseUrl}}/sessions",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions"]
+        }
       }
     },
     {
@@ -127,7 +139,11 @@
       "request": {
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{tokenA}}" }],
-        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+        "url": {
+          "raw": "{{baseUrl}}/sessions",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions"]
+        }
       }
     },
     {
@@ -155,7 +171,11 @@
           "mode": "raw",
           "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"message\": \"Hello Diana, this is a test message\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+        "url": {
+          "raw": "{{baseUrl}}/chat",
+          "host": ["{{baseUrl}}"],
+          "path": ["chat"]
+        }
       }
     },
     {
@@ -218,7 +238,11 @@
           "mode": "raw",
           "raw": "{\n  \"title\": \"Second Test Session\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+        "url": {
+          "raw": "{{baseUrl}}/sessions",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions"]
+        }
       }
     },
     {
@@ -239,7 +263,11 @@
       "request": {
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{tokenA}}" }],
-        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+        "url": {
+          "raw": "{{baseUrl}}/sessions",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions"]
+        }
       }
     },
     {
@@ -258,7 +286,11 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] }
+        "url": {
+          "raw": "{{baseUrl}}/sessions",
+          "host": ["{{baseUrl}}"],
+          "path": ["sessions"]
+        }
       }
     },
     {
@@ -283,7 +315,11 @@
           "mode": "raw",
           "raw": "{\n  \"email\": \"{{emailB}}\",\n  \"password\": \"password123\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "register"]
+        }
       }
     },
     {
@@ -308,7 +344,11 @@
           "mode": "raw",
           "raw": "{\n  \"email\": \"{{emailB}}\",\n  \"password\": \"password123\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
       }
     },
     {
@@ -353,7 +393,11 @@
         "url": {
           "raw": "{{baseUrl}}/sessions/00000000-0000-0000-0000-000000000000/messages",
           "host": ["{{baseUrl}}"],
-          "path": ["sessions", "00000000-0000-0000-0000-000000000000", "messages"]
+          "path": [
+            "sessions",
+            "00000000-0000-0000-0000-000000000000",
+            "messages"
+          ]
         }
       }
     },
@@ -380,7 +424,11 @@
           "mode": "raw",
           "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"message\": \"trying to hijack this session\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+        "url": {
+          "raw": "{{baseUrl}}/chat",
+          "host": ["{{baseUrl}}"],
+          "path": ["chat"]
+        }
       }
     },
     {
@@ -406,7 +454,11 @@
           "mode": "raw",
           "raw": "{\n  \"sessionId\": \"00000000-0000-0000-0000-000000000000\",\n  \"message\": \"test\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+        "url": {
+          "raw": "{{baseUrl}}/chat",
+          "host": ["{{baseUrl}}"],
+          "path": ["chat"]
+        }
       }
     },
     {
@@ -432,7 +484,11 @@
           "mode": "raw",
           "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"message\": \"\"\n}"
         },
-        "url": { "raw": "{{baseUrl}}/chat", "host": ["{{baseUrl}}"], "path": ["chat"] }
+        "url": {
+          "raw": "{{baseUrl}}/chat",
+          "host": ["{{baseUrl}}"],
+          "path": ["chat"]
+        }
       }
     }
   ]

@@ -14,7 +14,7 @@ const authenticate = async (req, res, next) => {
 
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    req.user = {id: decoded.user_id};
+    req.user = { id: decoded.user_id };
     next();
   } catch (error) {
     next(error);
