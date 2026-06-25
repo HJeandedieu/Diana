@@ -27,11 +27,22 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
       content: message,
     },
   });
+
+  const userMemories = await prisma.memory.findMany({
+    where:{ userId },
+    orderBy:{ importance:"desc" },
+    take:5
+  })
+
   const aiResponse = await axios.post(
     "http://localhost:8000/generate-response",
     {
       message,
-      memories: [],
+      memories: userMemories.map(m => ({
+        type:m.memoryType,
+        content: m.content,
+        importance: m.importance
+      })),
       history: [],
     },
   );
