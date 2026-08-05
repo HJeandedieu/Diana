@@ -16,11 +16,18 @@ const Login = () => {
       </div>
       <div className=" flex justify-evenly items-center gap">
         <div className="w-[40vw] h-[70vh] border-2 border-border rounded-2xl drop-shadow-shadow shadow-2xl">
-          <img className="w-full" src={login} alt="Login Illustration" />
+          <img
+            className="w-full"
+            src={login}
+            alt="Login Illustration"
+            draggable="false"
+          />
         </div>
         <div>
           <div className="flex flex-col justify-center items-center my-4">
-            <h1 className="font-cormorant text-4xl font-semibold">Welcome Back</h1>
+            <h1 className="font-cormorant text-4xl font-semibold">
+              Welcome Back
+            </h1>
             <span className="text-accent font-semi-bold">
               Sign in to continue to your dashboard
             </span>
@@ -36,7 +43,7 @@ const Login = () => {
                     type="email"
                     placeholder="your@email.com"
                   />
-                  <img className="size-6" src={mail} />
+                  <img className="size-6" src={mail} draggable="false" />
                 </div>
               </div>
             </div>
@@ -52,7 +59,7 @@ const Login = () => {
                     className="placeholder:tracking-[4px] placeholder:text-3xl py-2 border border-border w-[90%] rounded-lg pl-2"
                     placeholder="········"
                   />
-                  <img className="size-6" src={lock} />
+                  <img className="size-6" src={lock} draggable="false" />
                 </div>
               </div>
             </div>
@@ -60,13 +67,23 @@ const Login = () => {
             {/* Remember User */}
             <div className="flex justify-between mt-4">
               <div className="flex justify-center items-center gap-1.5">
-                <input type="checkbox" className="accent-border h-4 w-4 rounded border-2 border-slate-300 bg-slate-50 cursor-pointer" />
+                <input
+                  type="checkbox"
+                  className="accent-border h-4 w-4 rounded border-2 border-slate-300 bg-slate-50 cursor-pointer"
+                />
                 <span>Remember me</span>
               </div>
-              <Link className="text-sm text-accent underline" to="#">Forgot Password?</Link>
+              <Link className="text-sm text-accent underline" to="#">
+                Forgot Password?
+              </Link>
             </div>
             <div className="">
-              <Link className="flex justify-center bg-button rounded-full mx-[10%] px-2 py-2 my-4" to="/">Sign in</Link>
+              <Link
+                className="flex justify-center bg-button rounded-full mx-[10%] px-2 py-2 my-4"
+                to="/"
+              >
+                Sign in
+              </Link>
 
               {/* Authenticators */}
               <div className="flex gap-2 justify-center items-center my-3">
@@ -81,25 +98,28 @@ const Login = () => {
                   className="px-8 py-3 border border-border rounded-lg bg-button-muted"
                   to="#"
                 >
-                  <img className="w-6" src={google} />
+                  <img className="w-6" src={google} draggable="false" />
                 </Link>
                 <Link
                   className="px-8 py-3 border border-border rounded-lg bg-button-muted"
                   to="#"
                 >
-                  <img className="w-6" src={apple} />
+                  <img className="w-6" src={apple} draggable="false" />
                 </Link>
                 <Link
                   className="px-8 py-3 border border-border rounded-lg bg-button-muted"
                   to="#"
                 >
-                  <img className="w-6" src={github} />
+                  <img className="w-6" src={github} draggable="false" />
                 </Link>
               </div>
             </div>
           </div>
           <span className="flex gap-1 justify-center text-sm my-4">
-            New here? <Link className="text-accent underline" to="/register">Create Account</Link>
+            New here?{" "}
+            <Link className="text-accent underline" to="/register">
+              Create Account
+            </Link>
           </span>
         </div>
       </div>
