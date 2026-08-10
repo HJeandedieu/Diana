@@ -2,13 +2,24 @@
 @import "tailwindcss";
 
 @theme {
+  --color-text: #c8d9e6;
   --color-accent: #a3cae9;
   --color-muted: #668298;
   --color-border: #2b3b4e;
   --color-button: #4f7082;
   --color-button-muted: #14253a;
   --color-shadow: #061e44;
+  --color-background: #07152b;
+  --color-background-variant: #081832;
+  --color-user-message: #273546;
+  --color-codeblock: #222f3e;
+  --color-logo: #203a45;
+  --color-codeText: #c0c8cd;
   --font-cormorant: "Cormorant Garamond", serif;
   --font-dm: "DM Sans", sans-serif;
   --font-inter: "Inter", sans-serif;
+}
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
 }

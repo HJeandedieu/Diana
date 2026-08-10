@@ -1,18 +1,18 @@
 import { Routes, Route } from "react-router";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Chat from "./pages/Chat";
-import Memories from "./pages/Memories";
-import LandingPage from "./pages/landing/LandingPage";
+import LoginScreen from "./pages/LoginScreen";
+import RegisterScreen from "./pages/RegisterScreen";
+import ChatScreen from "./pages/ChatScreen";
+import MemoriesScreen from "./pages/MemoriesScreen";
+import LandingScreen from "./pages/landing/LandingScreen";
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Chat />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/memories" element={<Memories />} />
-      <Route path="/home" element={<LandingPage />} />
+      <Route path="/" element={<ChatScreen />} />
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/memories" element={<MemoriesScreen />} />
+      <Route path="/home" element={<LandingScreen />} />
     </Routes>
   );
 }

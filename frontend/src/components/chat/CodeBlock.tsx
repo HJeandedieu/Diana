@@ -16,7 +16,7 @@ export default function CodeBlock({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl border border-slate-700 bg-slate-900",
+        "max-w-full min-w-[50%] my-2  overflow-hidden rounded-xl border border-border bg-codeblock text-codeText",
         className,
       )}
       {...props}

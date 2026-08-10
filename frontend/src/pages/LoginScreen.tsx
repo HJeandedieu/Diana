@@ -9,7 +9,7 @@ import github from "../assets/github.svg";
 import "../index.css";
 const Login = () => {
   return (
-    <div className="bg-[#07152B] text-[#C8D9E6] font-dm h-screen">
+    <div className="bg-background text-text font-dm h-screen">
       <div className="flex justify-start items-center gap-2 h-20 pt-4 pl-10 mx-12">
         <img className="w-6" src={logo} />
         <span className="font-cormorant text-2xl">DIANA</span>
@@ -56,7 +56,7 @@ const Login = () => {
                 <div className="py-1 flex justify-between items-center">
                   <input
                     type="Password"
-                    className="placeholder:tracking-[4px] placeholder:text-3xl py-2 border border-border w-[90%] rounded-lg pl-2"
+                    className="placeholder:tracking-[4px] placeholder:text-3xl placeholder:text-border py-2 border border-border w-[90%] rounded-lg pl-2"
                     placeholder="········"
                   />
                   <img className="size-6" src={lock} draggable="false" />
