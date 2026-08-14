@@ -1,13 +1,15 @@
 import { cn } from "../../utils/utils";
 import type { HTMLAttributes } from "react";
 
+import { useNavigate } from "react-router";
+
 import Button from "../ui/Button";
 import ConversationList from "../chat/ConversationList";
 import BrandIdentity from "../ui/BrandIdentity";
 import type { Conversation } from "../../types";
 
 import collapse from "../../assets/collapse.svg";
-import extend from "../../assets/extend.svg"
+import extend from "../../assets/extend.svg";
 
 // Extensible domain interfaces for reliable context integration
 interface UserMetadata {
@@ -25,6 +27,7 @@ interface SidebarProps extends HTMLAttributes<HTMLElement> {
   onToggleCollapse: () => void;
   user?: UserMetadata; // Optional inject ensures zero breaking states
   onProfileClick?: () => void;
+  sessionsLoading?: boolean;
 }
 
 export default function Sidebar({
@@ -37,9 +40,11 @@ export default function Sidebar({
   user = { name: "Jean de Dieu", email: "jean@example.com" },
   onProfileClick,
   className,
+  sessionsLoading,
   ...props
 }: SidebarProps) {
-  
+
+  const navigate = useNavigate();
   // Clean fallback initials computation helper
   const userInitials = user.name
     .split(" ")
@@ -61,22 +66,24 @@ export default function Sidebar({
       {...props}
     >
       {/* Structural Header Wrapper */}
-      <div className="p-4 z-10 flex-shrink-0">
+      <div className="p-4 z-10 shrink-0">
         <div
           className={cn(
             "flex items-center mb-6 h-9",
             collapsed ? "justify-center" : "justify-between",
           )}
         >
-          {!collapsed && (
-            <BrandIdentity />
-          )}
+          {!collapsed && <BrandIdentity />}
 
           <Button
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
-            aria-label={collapsed ? "Expand sidebar navigation" : "Collapse sidebar navigation"}
+            aria-label={
+              collapsed
+                ? "Expand sidebar navigation"
+                : "Collapse sidebar navigation"
+            }
             className="text-[#8FA9C2] hover:bg-button-muted flex items-center text-xs transition-colors p-2"
           >
             {collapsed ? (
@@ -86,8 +93,8 @@ export default function Sidebar({
             ) : (
               <>
                 <span aria-hidden="true">
-                <img src={extend} alt="extend" />
-              </span>
+                  <img src={extend} alt="extend" />
+                </span>
               </>
             )}
           </Button>
@@ -102,18 +109,34 @@ export default function Sidebar({
               collapsed ? "w-12 mx-auto justify-center px-0" : "w-full",
             )}
           >
-            <span className="text-lg font-light" aria-hidden="true">+</span>
+            <span className="text-lg font-light" aria-hidden="true">
+              +
+            </span>
             {!collapsed && <span className="text-sm">New Chat</span>}
           </Button>
 
           <Button
             variant="ghost"
+            onClick={() => navigate("/memories")}
             className={cn(
               "text-[#8FA9C2] hover:text-[#C8D9E6] hover:bg-[#1E3550]/40 justify-start gap-3 h-11 px-4 rounded-lg font-normal transition-colors",
-              collapsed && "justify-center px-0"
+              collapsed && "justify-center px-0",
             )}
           >
-            <svg className="w-4 h-4 min-w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            <svg
+              className="w-4 h-4 min-w-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
+            </svg>
             {!collapsed && <span className="text-sm">Memories</span>}
           </Button>
 
@@ -121,10 +144,24 @@ export default function Sidebar({
             variant="ghost"
             className={cn(
               "text-[#8FA9C2] hover:text-[#C8D9E6] hover:bg-[#1E3550]/40 justify-start gap-3 h-11 px-4 rounded-lg font-normal transition-colors",
-              collapsed && "justify-center px-0"
+              collapsed && "justify-center px-0",
             )}
           >
-            <svg className="w-4 h-4 min-w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><circle cx="12" cy="12" r="3" /></svg>
+            <svg
+              className="w-4 h-4 min-w-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
             {!collapsed && <span className="text-sm">Settings</span>}
           </Button>
 
@@ -132,10 +169,23 @@ export default function Sidebar({
             variant="ghost"
             className={cn(
               "text-[#8FA9C2] hover:text-[#C8D9E6] hover:bg-[#1E3550]/40 justify-start gap-3 h-11 px-4 rounded-lg font-normal transition-colors",
-              collapsed && "justify-center px-0"
+              collapsed && "justify-center px-0",
             )}
           >
-            <svg className="w-4 h-4 min-w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            <svg
+              className="w-4 h-4 min-w-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
             {!collapsed && <span className="text-sm">Profile</span>}
           </Button>
         </nav>
@@ -149,18 +199,27 @@ export default function Sidebar({
           "[&::-webkit-scrollbar-track]:bg-transparent",
           "[&::-webkit-scrollbar-thumb]:bg-[#1E3550]",
           "[&::-webkit-scrollbar-thumb]:rounded-full",
-          "hover:[&::-webkit-scrollbar-thumb]:bg-[#567C8D]"
+          "hover:[&::-webkit-scrollbar-thumb]:bg-[#567C8D]",
         )}
       >
-        <div className={cn("transition-opacity duration-200", collapsed ? "opacity-0 pointer-events-none" : "opacity-100")}>
-          
-          {!collapsed && (
-            <ConversationList
-              conversations={conversations}
-              activeConversation={activeConversation}
-              onSelect={onConversationSelect}
-            />
+        <div
+          className={cn(
+            "transition-opacity duration-200",
+            collapsed ? "opacity-0 pointer-events-none" : "opacity-100",
           )}
+        >
+          {!collapsed &&
+            (sessionsLoading ? (
+              <p className="text-xs text-[#8FA9C2] px-3 py-4">
+                Loading conversations...
+              </p>
+            ) : (
+              <ConversationList
+                conversations={conversations}
+                activeConversation={activeConversation}
+                onSelect={onConversationSelect}
+              />
+            ))}
         </div>
       </div>
 
@@ -173,18 +232,24 @@ export default function Sidebar({
           aria-label={`User account menu for ${user.name}`}
           className={cn(
             "w-full flex items-center gap-3 p-1.5 rounded-lg hover:bg-[#132C4C]/50 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#567C8D]/60 transition-all",
-            collapsed ? "justify-center" : "justify-between"
+            collapsed ? "justify-center" : "justify-between",
           )}
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-full bg-[#1E3550] overflow-hidden flex-shrink-0 border border-[#567C8D]/20 flex items-center justify-center">
               {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt="" className="w-full h-full object-cover" />
+                <img
+                  src={user.avatarUrl}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <span className="text-xs font-semibold text-[#C8D9E6]">{userInitials}</span>
+                <span className="text-xs font-semibold text-[#C8D9E6]">
+                  {userInitials}
+                </span>
               )}
             </div>
-            
+
             {!collapsed && (
               <div className="flex flex-col min-w-0 animate-fadeIn">
                 <span className="text-xs font-medium text-[#C8D9E6] truncate">
@@ -196,10 +261,21 @@ export default function Sidebar({
               </div>
             )}
           </div>
-          
+
           {!collapsed && (
-            <svg className="w-3 h-3 text-[#8FA9C2] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+            <svg
+              className="w-3 h-3 text-[#8FA9C2] flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8 9l4-4 4 4m0 6l-4 4-4-4"
+              />
             </svg>
           )}
         </button>

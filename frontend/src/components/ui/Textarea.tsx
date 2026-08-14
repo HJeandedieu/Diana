@@ -32,7 +32,11 @@ export default function Textarea({
 
       <textarea
         id={id}
-        className={cn("resize-none py-3 px-3", textareaSizes[size], className)}
+        className={cn(
+          "resize-none py-3 px-3 no-scrollbar",
+          textareaSizes[size],
+          className,
+        )}
         {...props}
       />
 

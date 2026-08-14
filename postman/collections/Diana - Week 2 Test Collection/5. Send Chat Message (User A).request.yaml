@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/chat"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{tokenA}}
+body:
+  type: text
+  content: |-
+    {
+      "sessionId": "{{sessionId}}",
+      "message": "Hello Diana, this is a test message"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', () => pm.response.to.have.status(200));
+      const data = pm.response.json();
+      pm.test('Response data present', () => pm.expect(data.data).to.exist);
+    language: text/javascript
+order: 5000

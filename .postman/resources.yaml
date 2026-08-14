@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: 4f90d862-7c73-4ff3-86f5-2725df9fa582
+
+localResources:
+  collections:
+    - ../backend/postman/week_two.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/Diana - Week 2 Test Collection: 5ad0d0aa-5f18-478a-8473-15662605d529

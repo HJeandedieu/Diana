@@ -1,0 +1,19 @@
+$kind: http-request
+name: 10c. Ownership Violation - User B sends chat into User A's session
+url: "{{baseUrl}}/chat"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{tokenB}}
+body:
+  type: text
+  content: |-
+    {
+      "sessionId": "{{sessionId}}",
+      "message": "trying to hijack this session"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 404 (cannot chat into someone elses session)', () => pm.response.to.have.status(404));
+    language: text/javascript
+order: 14000

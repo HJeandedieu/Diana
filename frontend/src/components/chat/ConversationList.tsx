@@ -14,7 +14,6 @@ export default function ConversationList({
 }: ConversationListProps) {
   return (
     <div className="flex flex-col gap-2">
-
       {conversations.map((conversation) => (
         <ConversationItem
           key={conversation.id}

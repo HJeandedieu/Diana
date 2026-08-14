@@ -1,4 +1,6 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+import { loginUser } from "../services/authService";
 import login from "../assets/Login.svg";
 import logo from "../assets/Logo.svg";
 import mail from "../assets/mail.svg";
@@ -8,6 +10,37 @@ import apple from "../assets/apple.svg";
 import github from "../assets/github.svg";
 import "../index.css";
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleLogin(event: React.FormEvent) {
+    event.preventDefault();
+
+    if (!email.trim() || !password.trim()) {
+      setError("Please enter your email and password.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const token = await loginUser(email, password);
+
+      localStorage.setItem("token", token);
+
+      navigate("/");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unable to sign in.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="bg-background text-text font-dm h-screen">
       <div className="flex justify-start items-center gap-2 h-20 pt-4 pl-10 mx-12">
@@ -32,16 +65,22 @@ const Login = () => {
               Sign in to continue to your dashboard
             </span>
           </div>
-          <div className=" border border-border rounded-lg p-6 w-[25vw]">
+          <form
+            onSubmit={handleLogin}
+            className=" border border-border rounded-lg p-6 w-[25vw]"
+          >
             {/* Email Input */}
             <div className=" border-b border-border w-full py-2">
               <div>
                 <label htmlFor="email">Email</label>
                 <div className=" py-1 flex justify-between items-center">
                   <input
+                    id="email"
                     className="py-2 border border-border w-[90%] rounded-lg pl-2 placeholder:text-border"
                     type="email"
                     placeholder="your@email.com"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
                   />
                   <img className="size-6" src={mail} draggable="false" />
                 </div>
@@ -55,9 +94,12 @@ const Login = () => {
                 <br />
                 <div className="py-1 flex justify-between items-center">
                   <input
+                    id="password"
                     type="Password"
                     className="placeholder:tracking-[4px] placeholder:text-3xl placeholder:text-border py-2 border border-border w-[90%] rounded-lg pl-2"
                     placeholder="········"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                   />
                   <img className="size-6" src={lock} draggable="false" />
                 </div>
@@ -78,12 +120,16 @@ const Login = () => {
               </Link>
             </div>
             <div className="">
-              <Link
-                className="flex justify-center bg-button rounded-full mx-[10%] px-2 py-2 my-4"
-                to="/"
+              {error && (
+                <p className="text-red-500 text-sm text-center mt-3">{error}</p>
+              )}
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex justify-center w-[80%] bg-button rounded-full mx-[10%] px-2 py-2 my-4 disabled:opacity-50"
               >
-                Sign in
-              </Link>
+                {loading ? "Signing in..." : "Sign in"}
+              </button>
 
               {/* Authenticators */}
               <div className="flex gap-2 justify-center items-center my-3">
@@ -114,7 +160,7 @@ const Login = () => {
                 </Link>
               </div>
             </div>
-          </div>
+          </form>
           <span className="flex gap-1 justify-center text-sm my-4">
             New here?{" "}
             <Link className="text-accent underline" to="/register">

@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions"
+method: GET
+headers:
+  Authorization: Bearer {{tokenA}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', () => pm.response.to.have.status(200));
+      const data = pm.response.json();
+      pm.test('Contains at least 2 sessions', () => pm.expect(data.data.length).to.be.at.least(2));
+    language: text/javascript
+order: 8000

@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions"
+method: GET
+headers:
+  Authorization: Bearer {{tokenA}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', () => pm.response.to.have.status(200));
+      const data = pm.response.json();
+      pm.test('Returns an array', () => pm.expect(data.data).to.be.an('array'));
+      pm.test('Contains created session', () => {
+        const ids = data.data.map(s => s.id);
+        pm.expect(ids).to.include(pm.collectionVariables.get('sessionId'));
+      });
+    language: text/javascript
+order: 4000

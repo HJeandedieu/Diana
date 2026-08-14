@@ -1,6 +1,6 @@
 import "dotenv/config";
+import cors from "cors";
 import express from "express";
-import prisma from "./lib/prisma.js";
 import authRouter from "./routes/auth.routes.js";
 import sessionRouter from "./routes/session.routes.js";
 import chatRouter from "./routes/chat.routes.js";
@@ -8,6 +8,15 @@ import memoriesRouter from "./routes/memories.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 
 const app = express();
+
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

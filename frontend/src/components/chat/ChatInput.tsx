@@ -34,6 +34,12 @@ export default function ChatInput({
   className,
   ...props
 }: ChatInputProps) {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      onSend();
+    }
+  }
   return (
     <div
       className={cn(
@@ -49,6 +55,7 @@ export default function ChatInput({
         )}
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={loading || disabled}
         rows={1}

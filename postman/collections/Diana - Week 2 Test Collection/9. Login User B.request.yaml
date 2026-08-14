@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "{{emailB}}",
+      "password": "password123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', () => pm.response.to.have.status(200));
+      const data = pm.response.json();
+      pm.collectionVariables.set('tokenB', data.data.token);
+    language: text/javascript
+order: 11000

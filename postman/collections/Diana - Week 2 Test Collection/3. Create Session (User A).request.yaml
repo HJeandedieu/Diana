@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{tokenA}}
+body:
+  type: text
+  content: |-
+    {
+      "title": "Test Session"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 201', () => pm.response.to.have.status(201));
+      const data = pm.response.json();
+      pm.collectionVariables.set('sessionId', data.data.id);
+      pm.test('Session id returned', () => pm.expect(data.data.id).to.be.a('string'));
+    language: text/javascript
+order: 3000

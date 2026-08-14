@@ -1,0 +1,10 @@
+$kind: collection
+name: Diana - Week 2 Test Collection
+description: Tests auth, sessions, chat, and ownership boundaries for Diana's backend.
+variables:
+  baseUrl: http://localhost:3000/api
+  tokenA: ""
+  tokenB: ""
+  sessionId: ""
+  emailA: ""
+  emailB: ""

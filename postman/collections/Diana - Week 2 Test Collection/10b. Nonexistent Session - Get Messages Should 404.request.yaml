@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/00000000-0000-0000-0000-000000000000/messages"
+method: GET
+headers:
+  Authorization: Bearer {{tokenA}}
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 404', () => pm.response.to.have.status(404));
+    language: text/javascript
+order: 13000

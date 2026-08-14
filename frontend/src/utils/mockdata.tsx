@@ -12,18 +12,6 @@ export const messages: Message[] = [
     content: "Hello! I'm Diana. What can I do for you today?",
   },
   {
-    id: "3",
-    role: "user",
-    content:
-      "I'm struggling with TypeScript types. I have a large 'User' interface, but I need different versions for creating, updating, and displaying users without rewriting the whole thing. Is there a better way?",
-  },
-  {
-    id: "4",
-    role: "assistant",
-    content:
-      "Absolutely! You're describing the perfect use case for **TypeScript Utility Types**.  These are built-in tools that let you transform an existing type into a new one without duplication.\n\nThe most common ones for your scenario are:\n- **`Pick<T, K>`**: Selects specific properties.\n- **`Omit<T, K>`**: Removes specific properties.\n- **`Partial<T>`**: Makes all properties optional.\n- **`Required<T>`**: Makes all properties mandatory.\n\nCould you share your `User` interface?",
-  },
-  {
     id: "5",
     role: "user",
     content:
@@ -33,7 +21,7 @@ export const messages: Message[] = [
     id: "6",
     role: "assistant",
     content:
-      "Perfect. Here is how we can derive your specific types from that single source of truth:\n\n**1.  For Creating a User (`CreateUserDTO`)**\nYou usually don't provide the `id` or `createdAt` (the database handles that), and you definitely don't want to type the `role` manually every time if it defaults to 'user'.  We can use **`Omit`** to remove the fields you don't need in the input.\n\n```typescript\n// Removes 'id', 'createdAt', and 'role' from User\ntype CreateUserDTO = Omit<User, 'id' | 'createdAt' | 'role'>;\n\n// Result: { email, name, password }\n```\n\n**2.  For Updating a User (`UpdateUserDTO`)**\nWhen updating, you typically only send the fields that changed. Everything should be optional.  We combine **`Omit`** (to remove read-only fields like id) and **`Partial`** (to make the rest optional).\n\n```typescript\n// Removes 'id' and 'createdAt', then makes everything else optional\ntype UpdateUserDTO = Partial<Omit<User, 'id' | 'createdAt'>>;\n\n// Result: { email?, name?, password?, role? }\n```\n\n**3.  For Displaying a User (`PublicUser`)**\nYou never want to send the `password` to the frontend. We can use **`Omit`** again.\n\n```typescript\n// Removes 'password' and 'role' (if you want to hide roles too)\ntype PublicUser = Omit<User, 'password' | 'role'>;\n\n// Result: { id, email, name, createdAt }\n```\n\nDoes this make sense?",
+      "## Derived Types Implementation\n\nPerfect. Here is how we derive strictly typed Data Transfer Objects (DTOs) from your single source of truth:\n\n### 1. Create User DTO (`CreateUserDTO`)\n\nWe omit server-managed fields (`id`, `createdAt`) since the database handles those automatically.\n\n```typescript\n// Input validation schema for POST /users\ntype CreateUserDTO = Omit<User, 'id' | 'createdAt' | 'role'>;\n\n// Result: { email: string, name: string, password: string }\n```\n\n### 2. Update User DTO (`UpdateUserDTO`)\n\nFor PATCH requests, fields must be optional, but we still exclude read-only system fields.\n\n```typescript\n// Input validation schema for PATCH /users/:id\ntype UpdateUserDTO = Partial<Omit<User, 'id' | 'createdAt'>>;\n\n// Result: { email?: string, name?: string, password?: string, role?: 'admin' | 'user' }\n```\n\n### 3. Public User Response (`PublicUser`)\n\nNever expose `password` or internal `role` logic to the client. This type guarantees safety at compile time.\n\n```typescript\n// Response type for GET /users/:id\ntype PublicUser = Omit<User, 'password' | 'role'>;\n\n// Result: { id: string, email: string, name: string, createdAt: Date }\n```\n\n### Why This Matters\n\nBy using `Omit` and `Partial`, you establish a **Single Source of Truth**.  If you add a `phoneNumber` field to `User` tomorrow, your build pipeline will immediately flag any missing handling in your Create/Update flows, preventing runtime bugs.",
   },
   {
     id: "7",
@@ -45,7 +33,7 @@ export const messages: Message[] = [
     id: "8",
     role: "assistant",
     content:
-      "Great question! They are essentially opposites:\n\n- **`Pick<T, K>`** is **inclusive**.  You list the keys you *want to keep*. Use this when you only need a small subset of a large type.\n  ```typescript\n  // I only want the 'email' and 'name'\n  type UserSummary = Pick<User, 'email' | 'name'>;\n  ```\n\n- **`Omit<T, K>`** is **exclusive**.  You list the keys you *want to remove*. Use this when you want almost everything except a few fields (like dropping an ID or password).\n  ```typescript\n  // I want everything EXCEPT 'password'\n  type SafeUser = Omit<User, 'password'>;\n  ```\n\n**Rule of Thumb:** If the list of keys you are typing is shorter than the list of keys you are ignoring, use `Pick`. Otherwise, use `Omit`.",
+      "## `Pick` vs. `Omit`: Logical Inverses\n\nGreat question! They are essentially opposites:\n\n### `Pick<T, K>`: The Whitelist Approach\n\nUse this when you need a **small subset** of a large type.  It is explicit about what you *include*.\n\n```typescript\n// I only want the 'email' and 'name'\ntype UserSummary = Pick<User, 'email' | 'name'>;\n```\n\n### `Omit<T, K>`: The Blacklist Approach\n\nUse this when you want **almost everything** except a few sensitive or irrelevant fields.  It is explicit about what you *exclude*.\n\n```typescript\n// I want everything EXCEPT 'password'\ntype SafeUser = Omit<User, 'password'>;\n```\n\n### Comparison Summary\n\n| Feature | `Pick` | `Omit` |\n| :--- | :--- | :--- |\n| **Strategy** | Inclusive (Whitelist) | Exclusive (Blacklist) |\n| **Use When** | You need few fields from many | You want all fields except a few |\n| **Risk** | Missing new fields automatically | Accidentally including new sensitive fields |\n\n> **Rule of Thumb:** If the list of keys you are typing is shorter than the list of keys you are ignoring, use `Pick`.  Otherwise, use `Omit`.",
   },
   {
     id: "9",
@@ -56,7 +44,7 @@ export const messages: Message[] = [
     id: "10",
     role: "assistant",
     content:
-      "Exactly. **`Partial<T>`** takes a type and makes **every** property optional.  \n\nIt is ideal for:\n1. **Update forms**: As we saw, you rarely update every single field at once.\n2. **Configuration objects**: Where a user might only override specific default settings.\n\n```typescript\ninterface Config {\n  darkMode: boolean;\n  language: string;\n  fontSize: number;\n}\n\n// User only wants to change darkMode\ntype ConfigUpdate = Partial<Config>; \n// Result: { darkMode?: boolean, language?: string, fontSize?: number }\n```\n\nJust remember: `Partial` is **shallow**.  It only makes top-level properties optional. If your type has nested objects, those inner properties remain required unless you create a custom `DeepPartial` type.",
+      "## Understanding `Partial<T>`\n\nExactly. **`Partial<T>`** takes a type and makes **every** property optional.\n\n### Ideal Use Cases\n\n1.  **Update forms**: As we saw, you rarely update every single field at once.\n2. **Configuration objects**: Where a user might only override specific default settings.\n3. **PATCH endpoints**: APIs that accept partial updates.\n\n### Example Usage\n\n```typescript\ninterface Config {\n  darkMode: boolean;\n  language: string;\n  fontSize: number;\n}\n\n// User only wants to change darkMode\ntype ConfigUpdate = Partial<Config>; \n// Result: { darkMode?: boolean, language?: string, fontSize?: number }\n```\n\n### Critical Note: Shallow vs. Deep\n\n> **Warning:** `Partial` is **shallow**.  It only makes top-level properties optional. If your type has nested objects, those inner properties remain required unless you create a custom `DeepPartial` type.\n\nFor nested structures, you would need a recursive mapped type to make all levels optional.",
   },
   {
     id: "11",
@@ -68,7 +56,7 @@ export const messages: Message[] = [
     id: "12",
     role: "assistant",
     content:
-      "**Yes, exactly!** That is the biggest benefit.\n\nIf you add `phoneNumber` to your base `User` interface:\n1. Your `CreateUserDTO` (using `Omit`) will automatically include `phoneNumber` as a required field (unless you explicitly omit it).\n2. Your `UpdateUserDTO` will automatically allow `phoneNumber` as an optional update.\n3. Your `PublicUser` will automatically include `phoneNumber` (unless you omit it for privacy).\n\nYou maintain a **Single Source of Truth**.  You don't have to hunt down five different interfaces to add that one new field, which drastically reduces bugs and inconsistencies.",
+      "## The Power of a Single Source of Truth\n\n**Yes, exactly!** That is the biggest benefit.\n\n### Impact Analysis\n\nIf you add `phoneNumber: string` to your base `User` interface:\n\n1.  **`CreateUserDTO`** (using `Omit`): Will automatically include `phoneNumber` as a required field (unless you explicitly omit it).  The compiler will error until you decide whether to collect it.\n2. **`UpdateUserDTO`**: Will automatically allow `phoneNumber` as an optional update field, ready for your API to handle.\n3. **`PublicUser`**: Will automatically include `phoneNumber` (unless you omit it for privacy). This forces you to make a conscious security decision about PII.\n\n### Benefits of This Approach\n\n- **No Type Drift**: You don't have to hunt down five different interfaces to add that one new field.\n- **Compile-Time Safety**: The compiler forces you to handle new fields explicitly.\n- **Reduced Bugs**: Drastically reduces inconsistencies between your API layers and frontend models.\n\nYou maintain a **Single Source of Truth**, which is the cornerstone of maintainable TypeScript codebases.",
   },
   {
     id: "13",
@@ -80,6 +68,6 @@ export const messages: Message[] = [
     id: "14",
     role: "assistant",
     content:
-      "You're very welcome! Happy coding, and feel free to reach out if you run into any more TypeScript challenges. 🚀",
+      "## Next Steps 🚀\n\nYou're very welcome! Refactoring to utility types is a high-leverage move for long-term maintainability.\n\n### Recommended Follow-ups\n\n- **Runtime Validation**: Pair these types with **Zod** or **Valibot** schemas for end-to-end type safety from database to UI.\n- **Deep Partial**: If you have nested forms, I can help you implement a `DeepPartial` utility type.\n- **Advanced Patterns**: Explore `Record<K, V>` for permission maps or `ReturnType<T>` for inferring function results.\n\nFeel free to reach out if you need assistance with implementation details. Happy coding!",
   },
 ];
