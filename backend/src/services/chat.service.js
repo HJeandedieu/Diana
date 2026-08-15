@@ -28,20 +28,37 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
     },
   });
 
+  const messageCount = await prisma.message.count({
+    where: { sessionId: session.id },
+  });
+
+  if (messageCount === 1) {
+  const titleResponse = await axios.post(
+    "http://localhost:8000/generate-title",
+    { message, memories: [], history: [] }
+  );
+  const title = titleResponse.data.response;
+
+  await prisma.session.update({
+    where: { id: session.id },
+    data: { title }
+  });
+}
+
   const userMemories = await prisma.memory.findMany({
-    where:{ userId },
-    orderBy:{ importance:"desc" },
-    take:5
-  })
+    where: { userId },
+    orderBy: { importance: "desc" },
+    take: 5,
+  });
 
   const aiResponse = await axios.post(
     "http://localhost:8000/generate-response",
     {
       message,
-      memories: userMemories.map(m => ({
-        type:m.memoryType,
+      memories: userMemories.map((m) => ({
+        type: m.memoryType,
         content: m.content,
-        importance: m.importance
+        importance: m.importance,
       })),
       history: [],
     },

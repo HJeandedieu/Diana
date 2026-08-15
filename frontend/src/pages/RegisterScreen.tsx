@@ -1,4 +1,8 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+
+import { registerUser } from "../services/authService";
+
 import signup from "../assets/signup.svg";
 import logo from "../assets/Logo.svg";
 import profile from "../assets/profile.svg";
@@ -8,7 +12,38 @@ import google from "../assets/google.svg";
 import apple from "../assets/apple.svg";
 import github from "../assets/github.svg";
 import "../index.css";
+
 const Register = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleRegister(event: React.FormEvent) {
+    event.preventDefault();
+
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setError("Please provide your registration credentials");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const { token, user } = await registerUser(name, email, password);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unable to register.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="bg-[#07152B] text-[#C8D9E6] font-dm h-screen">
       <div className="flex justify-start items-center gap-2 pt-4 pl-10 mx-12">
@@ -33,13 +68,19 @@ const Register = () => {
               Start your journey with Diana
             </span>
           </div>
-          <div className=" border border-border rounded-lg p-5 w-[25vw]">
+          <form
+            onSubmit={handleRegister}
+            className=" border border-border rounded-lg p-5 w-[25vw]"
+          >
             {/* User names */}
             <div className=" border-b border-border w-full py-2">
               <div>
                 <label htmlFor="names">Full Name</label>
                 <div className=" py-1 flex justify-between items-center">
                   <input
+                    id="full-name"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
                     className="py-1 border border-border w-[90%] rounded-lg pl-2 placeholder:text-border"
                     type="text"
                     placeholder="RedBlue JD"
@@ -55,6 +96,9 @@ const Register = () => {
                 <label htmlFor="email">Email</label>
                 <div className=" py-1 flex justify-between items-center">
                   <input
+                    id="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
                     className="py-1 border border-border w-[90%] rounded-lg pl-2 placeholder:text-border"
                     type="email"
                     placeholder="your@email.com"
@@ -71,9 +115,12 @@ const Register = () => {
                 <br />
                 <div className="py-1 flex justify-between items-center">
                   <input
+                    id="password"
+                    value={password}
                     type="Password"
                     className="placeholder:tracking-[4px] placeholder:text-3xl py-1 border border-border w-[90%] rounded-lg pl-2"
                     placeholder="········"
+                    onChange={(event) => setPassword(event.target.value)}
                   />
                   <img className="size-6" src={lock} draggable="false" />
                 </div>
@@ -94,12 +141,16 @@ const Register = () => {
               </Link>
             </div>
             <div>
-              <Link
+              {error && (
+                <p className="text-red-300 text-sm text-center mt-3">{error}</p>
+              )}
+              <button
+                type="submit"
+                disabled={loading}
                 className="flex justify-center bg-button rounded-full mx-[10%] px-2 py-2 my-4"
-                to="/"
               >
-                Sign in
-              </Link>
+                {loading ? "Creating account..." : "Sign Up"}
+              </button>
 
               {/* Authenticators */}
               <div className="flex gap-2 justify-center items-center my-3">
@@ -130,7 +181,7 @@ const Register = () => {
                 </Link>
               </div>
             </div>
-          </div>
+          </form>
           <span className="flex gap-1 justify-center text-sm my-3">
             Already have an account?{" "}
             <Link className="text-accent underline" to="/login">

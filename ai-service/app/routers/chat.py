@@ -32,3 +32,21 @@ def generate_response(request: Request):
     )
     text = response.choices[0].message.content
     return Response(response=text)
+
+@chat_router.post("/generate-title")
+def generate_title(request: Request):
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "system",
+                "content": "Generate a short, concise title (max 5 words) for a conversation that starts with this message. Return only the title, nothing else. No quotes, no punctuation at the end."
+            },
+            {
+                "role": "user",
+                "content": request.message
+            }
+        ],
+        max_tokens=20
+    )
+    return Response(response=response.choices[0].message.content.strip())

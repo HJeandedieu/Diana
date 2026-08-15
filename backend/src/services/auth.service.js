@@ -14,7 +14,7 @@ const signToken = (userId) => {
   });
 };
 
-export const createAccount = async ({ email, password }) => {
+export const createAccount = async ({ email, password, name }) => {
   // Check if user doesn't exist
 
   const existingUser = await prisma.user.findUnique({
@@ -34,6 +34,7 @@ export const createAccount = async ({ email, password }) => {
     data: {
       email,
       passwordHash,
+      name,
     },
   });
   const token = signToken(newUser.id);

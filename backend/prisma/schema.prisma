@@ -9,12 +9,13 @@ datasource db {
 }
 
 model User {
-  id  String  @id @default(cuid())
-  email String  @unique
-  passwordHash  String
-  createdAt DateTime  @default(now())
-  sessions  Session[]
-  memories  Memory[]
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime  @default(now())
+  sessions     Session[]
+  memories     Memory[]
 }
 
 model Session {

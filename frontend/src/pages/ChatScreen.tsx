@@ -13,6 +13,8 @@ import ChatInput from "../components/chat/ChatInput";
 
 import type { Message, Session } from "../types";
 
+import ThinkingIndicator from "../components/chat/ThinkingIndicator";
+
 export default function ChatScreen() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeConversation, setActiveConversation] = useState<string | null>(
@@ -25,6 +27,7 @@ export default function ChatScreen() {
   const [sessionsLoading, setSessionsLoading] = useState(true);
 
   const bottomRef = useRef<HTMLDivElement>(null);
+  const latestMessageId = useRef<string | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -61,6 +64,7 @@ export default function ChatScreen() {
   }, []);
 
   async function handleNewChat() {
+    latestMessageId.current = null;
     const token = localStorage.getItem("token");
     if (!token) return;
 
@@ -78,6 +82,7 @@ export default function ChatScreen() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
+    latestMessageId.current = null; // clear so no typewriter on loaded messages
     setActiveConversation(id);
     try {
       const msgs = await getSessionMessages(id, token);
@@ -111,8 +116,13 @@ export default function ChatScreen() {
         content,
         token,
       );
-
+      latestMessageId.current = assistantMessage.id;
       setMessages((prev) => [...prev, assistantMessage]);
+
+      if (messages.length === 0) {
+        const updatedSessions = await getSessions(token);
+        setSessions(updatedSessions);
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
       setMessages((prev) => [
@@ -142,7 +152,7 @@ export default function ChatScreen() {
         onToggleCollapse={() => setCollapsed(!collapsed)}
         onConversationSelect={handleConversationSelect}
         onNewChat={handleNewChat}
-        loading={sessionsLoading}
+        sessionsLoading={sessionsLoading}
       />
 
       <section
@@ -160,8 +170,14 @@ export default function ChatScreen() {
           }}
         >
           {messages.map((msg) => (
-            <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
+            <ChatMessage
+              key={msg.id}
+              role={msg.role}
+              content={msg.content}
+              isLatest={msg.id === latestMessageId.current}
+            />
           ))}
+          {loading && <ThinkingIndicator />}
           <div ref={bottomRef}></div>
         </div>
 

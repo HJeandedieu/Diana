@@ -1,12 +1,13 @@
 import { cn } from "../../utils/utils";
 import type { HTMLAttributes } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
-
 import Logo from "../ui/Logo";
+import { useTypewriter } from "../../hooks/useTypeWriter";
 
 interface ChatMessageProps extends HTMLAttributes<HTMLDivElement> {
   role: "user" | "assistant";
   content: string;
+  isLatest?: boolean;
   timestamp?: string;
   className?: string;
 }
@@ -14,10 +15,20 @@ interface ChatMessageProps extends HTMLAttributes<HTMLDivElement> {
 export default function ChatMessage({
   role,
   content,
+  isLatest = false,
   timestamp,
   className,
   ...props
 }: ChatMessageProps) {
+  const { displayed } = useTypewriter(
+    content,
+    role === "assistant" && isLatest,
+    6,
+  );
+
+  const renderedContent =
+    role === "assistant" && isLatest ? displayed : content;
+
   return (
     <div
       className={cn("flex flex-col gap-3 py-4 w-full", className)}
@@ -37,11 +48,11 @@ export default function ChatMessage({
         )}
 
         {role === "assistant" ? (
-          <div className="max-w-full flex ">
-            <MarkdownRenderer content={content} />
+          <div className="max-w-[85%] w-full">
+            <MarkdownRenderer content={renderedContent} />
           </div>
         ) : (
-          <div className="rounded-xl px-4 py-3 max-w-[50%] bg-user-message text-white">
+          <div className="rounded-xl px-4 py-3 max-w-[55%] bg-user-message text-white text-[15px] leading-7">
             {content}
           </div>
         )}

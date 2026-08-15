@@ -16,10 +16,15 @@ export interface Message {
   createdAt?: string;
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
   success: boolean;
   data: {
     token: string;
+    user: {
+      id: string;
+      email: string;
+      name: string | null;
+    };
   };
 }
 
@@ -28,7 +33,6 @@ export interface SendMessageResponse {
   data: Message;
 }
 
-
 export interface Memory {
   id: string;
   memoryType: string;
@@ -36,4 +40,11 @@ export interface Memory {
   importance: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string | null;
+  createdAt?: string;
 }

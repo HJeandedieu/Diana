@@ -29,10 +29,9 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const token = await loginUser(email, password);
-
+      const { token, user } = await loginUser(email, password);
       localStorage.setItem("token", token);
-
+      localStorage.setItem("user", JSON.stringify(user));
       navigate("/");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Unable to sign in.");
@@ -121,7 +120,7 @@ const Login = () => {
             </div>
             <div className="">
               {error && (
-                <p className="text-red-500 text-sm text-center mt-3">{error}</p>
+                <p className="text-red-300 text-sm text-center mt-3">{error}</p>
               )}
               <button
                 type="submit"

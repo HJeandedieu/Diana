@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { cn } from "../utils/utils";
 import Sidebar from "../components/layout/Sidebar";
-import { getMemories, updateMemory, deleteMemory } from "../services/memoryService";
+import {
+  getMemories,
+  updateMemory,
+  deleteMemory,
+} from "../services/memoryService";
 import { getSessions } from "../services/sessionService";
 import type { Memory, Session } from "../types/index";
 
 const TYPE_COLORS: Record<string, string> = {
-  project:    "bg-[#1a3a5c] text-[#7ab8d4] border-[#2a5a8c]",
-  skill:      "bg-[#1a3a2c] text-[#7ab894] border-[#2a5a3c]",
-  goal:       "bg-[#3a2a1a] text-[#d4a87a] border-[#5a3a2a]",
+  project: "bg-[#1a3a5c] text-[#7ab8d4] border-[#2a5a8c]",
+  skill: "bg-[#1a3a2c] text-[#7ab894] border-[#2a5a3c]",
+  goal: "bg-[#3a2a1a] text-[#d4a87a] border-[#5a3a2a]",
   preference: "bg-[#2a1a3a] text-[#a87ab8] border-[#3a2a5a]",
-  fact:       "bg-[#1e3550] text-[#8fa9c2] border-[#2a4a6a]",
+  fact: "bg-[#1e3550] text-[#8fa9c2] border-[#2a4a6a]",
 };
 
 const IMPORTANCE_LABEL: Record<number, string> = {
@@ -41,18 +46,19 @@ function ImportanceDots({ score }: { score: number }) {
 }
 
 export default function MemoriesScreen() {
-  const [memories, setMemories]         = useState<Memory[]>([]);
-  const [sessions, setSessions]         = useState<Session[]>([]);
-  const [loading, setLoading]           = useState(true);
-  const [collapsed, setCollapsed]       = useState(false);
-  const [editingId, setEditingId]       = useState<string | null>(null);
-  const [editContent, setEditContent]   = useState("");
-  const [savingId, setSavingId]         = useState<string | null>(null);
-  const [deletingId, setDeletingId]     = useState<string | null>(null);
-  const [filter, setFilter]             = useState<string>("all");
-  const [error, setError]               = useState("");
+  const [memories, setMemories] = useState<Memory[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState("");
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<string>("all");
+  const [error, setError] = useState("");
 
   const token = localStorage.getItem("token") ?? "";
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function init() {
@@ -72,11 +78,15 @@ export default function MemoriesScreen() {
     init();
   }, []);
 
-  const types = ["all", ...Array.from(new Set(memories.map((m) => m.memoryType)))];
+  const types = [
+    "all",
+    ...Array.from(new Set(memories.map((m) => m.memoryType))),
+  ];
 
-  const filtered = filter === "all"
-    ? memories
-    : memories.filter((m) => m.memoryType === filter);
+  const filtered =
+    filter === "all"
+      ? memories
+      : memories.filter((m) => m.memoryType === filter);
 
   async function handleDelete(id: string) {
     setDeletingId(id);
@@ -115,23 +125,22 @@ export default function MemoriesScreen() {
         activeConversation=""
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed(!collapsed)}
-        onConversationSelect={() => {}}
-        onNewChat={() => {}}
+        onConversationSelect={() => navigate("/")}
+        onNewChat={() => navigate("/")}
       />
 
       <section className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="px-10 pt-10 pb-6 border-b border-[#1E3550] shrink-0">
-          <h1 className="font-cormorant text-3xl font-semibold text-[#C8D9E6] mb-1">
+          <h1 className="font-dm text-3xl font-semibold text-[#C8D9E6] mb-1">
             Memories
           </h1>
           <p className="text-sm text-[#567C8D]">
-            Everything Diana knows about you — {memories.length} memories stored.
+            Everything Diana knows about you — {memories.length} memories
+            stored.
           </p>
 
-          {error && (
-            <p className="text-red-400 text-sm mt-3">{error}</p>
-          )}
+          {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
 
           {/* Filter tabs */}
           <div className="flex gap-2 mt-5 flex-wrap">
@@ -179,7 +188,7 @@ export default function MemoriesScreen() {
                   <div className="flex items-center justify-between">
                     <span
                       className={cn(
-                        "text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1 rounded-full border capitalize",
+                        "text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1 rounded-full border",
                         TYPE_COLORS[memory.memoryType] ?? TYPE_COLORS.fact,
                       )}
                     >
