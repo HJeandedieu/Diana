@@ -1,6 +1,7 @@
 import axios from "axios";
 import prisma from "../lib/prisma.js";
 import { AppError, NotFoundError, BadRequestError } from "../utils/error.js";
+import { AI_SERVICE_API_URL } from "../env.js";
 
 export const fetchChatResponse = async ({ userId, sessionId, message }) => {
   const session = await prisma.session.findFirst({
@@ -34,7 +35,7 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
 
   if (messageCount === 1) {
   const titleResponse = await axios.post(
-    "http://localhost:8000/generate-title",
+    `${AI_SERVICE_API_URL}/generate-title`,
     { message, memories: [], history: [] }
   );
   const title = titleResponse.data.response;
@@ -52,7 +53,7 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
   });
 
   const aiResponse = await axios.post(
-    "http://localhost:8000/generate-response",
+    `${AI_SERVICE_API_URL}/generate-response`,
     {
       message,
       memories: userMemories.map((m) => ({
@@ -72,7 +73,7 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
   ];
 
   const memoriesResponse = await axios.post(
-    "http://localhost:8000/extract-memory",
+    `${AI_SERVICE_API_URL}/extract-memory`,
     { conversation },
   );
   const extractedMemories = memoriesResponse.data;

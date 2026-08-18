@@ -23,7 +23,7 @@ def generate_response(request: Request):
     system_prompt = DIANA_SYSTEM_PROMPT.replace("{memories}", memories_text)
     
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=settings.GROQ_MODEL,
         messages=[
             {"role": "system", "content": system_prompt},
             *[{"role": m.role, "content": m.content} for m in request.history],
@@ -36,7 +36,7 @@ def generate_response(request: Request):
 @chat_router.post("/generate-title")
 def generate_title(request: Request):
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=settings.GROQ_MODEL,
         messages=[
             {
                 "role": "system",

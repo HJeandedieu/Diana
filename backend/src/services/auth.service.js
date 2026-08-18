@@ -15,12 +15,8 @@ const signToken = (userId) => {
 };
 
 export const createAccount = async ({ email, password, name }) => {
-  // Check if user doesn't exist
-
   const existingUser = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
+    where: { email },
   });
 
   if (existingUser) {
@@ -31,22 +27,18 @@ export const createAccount = async ({ email, password, name }) => {
   const passwordHash = await bcrypt.hash(password, salt);
 
   const newUser = await prisma.user.create({
-    data: {
-      email,
-      passwordHash,
-      name,
-    },
+    data: { email, passwordHash, name },
   });
-  const token = signToken(newUser.id);
 
-  return { token, user: newUser };
+  const token = signToken(newUser.id);
+  const { passwordHash: _, ...safeUser } = newUser;
+
+  return { token, user: safeUser };
 };
 
 export const loginUser = async ({ email, password }) => {
   const user = await prisma.user.findUnique({
-    where: {
-      email,
-    },
+    where: { email },
   });
 
   if (!user) {
@@ -60,8 +52,7 @@ export const loginUser = async ({ email, password }) => {
   }
 
   const token = signToken(user.id);
-
-  const { passwordHash, ...safeUser } = user;
+  const { passwordHash: _, ...safeUser } = user;
 
   return { token, user: safeUser };
 };

@@ -16,7 +16,7 @@ def extract_memory(request: Request):
     
     conversation_text = "\n".join([f"{m.role}: {m.content}" for m in request.conversation])
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=settings.GROQ_MODEL,
         messages=[
             {"role":"system", "content": memory_extraction.MEMORY_EXTRACTION_PROMPT},
             {"role": "user", "content": f"Extract memories from this conversation:\n\n{conversation_text}"}
