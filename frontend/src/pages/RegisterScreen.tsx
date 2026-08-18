@@ -4,7 +4,7 @@ import { useState } from "react";
 import { registerUser } from "../services/authService";
 
 import signup from "../assets/signup.svg";
-import logo from "../assets/Logo.svg";
+import logo from "../assets/logo.svg";
 import profile from "../assets/profile.svg";
 import mail from "../assets/mail.svg";
 import lock from "../assets/lock.svg";

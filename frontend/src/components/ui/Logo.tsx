@@ -1,4 +1,4 @@
-import logo from "../../assets/Logo.svg";
+import logo from "../../assets/logo.svg";
 import type { ImgHTMLAttributes } from "react";
 
 import { cn } from "../../utils/utils";
