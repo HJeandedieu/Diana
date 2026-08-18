@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { cn } from "../utils/utils";
 import Sidebar from "../components/layout/Sidebar";
 import { getSessions } from "../services/sessionService";
 import {
