@@ -8,19 +8,45 @@ interface MarkdownRendererProps {
   className?: string;
 }
 
+/**
+ * Production-ready pre-processor to format unstructured text patterns
+ * and malformed inline text structures into standard, valid Markdown layout grids.
+ */
+function preProcessMarkdown(rawContent: string): string {
+  if (!rawContent) return "";
+
+  let processed = rawContent;
+
+  // 1. Convert raw text break tags into functional markdown newlines
+  processed = processed.replace(/<br\s*\/?>/gi, "\n");
+
+  // 2. Fix malformed header rows (e.g., "| - - -" or "| - ") into uniform table syntax
+  // Captures pipe containers that contain spaces/dashes and formats them to "---|"
+  processed = processed.replace(/\|\s*[-\s]{3,}\s*(?=\|)/g, "| --- ");
+  processed = processed.replace(/\|\s*-\s*(?=\|)/g, "| --- ");
+
+  // 3. Structural Table Alignment:
+  // If the AI streams row lines with inline separator chains like "||",
+  // we slice them into individual, separate line breaks so the block parser reads rows accurately.
+  processed = processed.replace(/\|\|\s*(?=\*\*)/g, "|\n|");
+  processed = processed.replace(/\|\s*(?=\*\*)/g, "|\n|");
+
+  // 4. Clean up trailing line breaks inside markdown lists or headers if they broke lines early
+  processed = processed.replace(/\n\s*\|\s*\n/g, "\n");
+
+  return processed;
+}
+
 export default function MarkdownRenderer({
   content,
   className,
 }: MarkdownRendererProps) {
   
-  // 1. Cleans up literal "<br>" strings and formats them into clean newlines
-  const processedContent = content
-    ? content.replace(/<br\s*\/?>/gi, "\n")
-    : "";
+  const cleanContent = preProcessMarkdown(content);
 
   return (
     <div className="w-full max-w-full overflow-hidden block">
-      <div className={cn("text-[15px] leading-7 tracking-normal w-full wrap-break-words whitespace-pre-wrap", className)}>
+      <div className={cn("text-[15px] leading-7 tracking-normal w-full wrap-break-words whitespace-pre-wrap text-[#C8D9E6]", className)}>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]} 
           components={{
@@ -38,7 +64,7 @@ export default function MarkdownRenderer({
               }
               return (
                 <CodeBlock
-                  language={match[1]} // Safe match index parsing
+                  language={match[1]} 
                   code={String(children).replace(/\n$/, "")}
                 />
               );
@@ -94,11 +120,11 @@ export default function MarkdownRenderer({
             hr() {
               return <hr className="border-[#1E3550] my-5" />;
             },
-            // --- Validated Table Handling Setup ---
+            // --- Stable Table Styling Structure ---
             table({ children }) {
               return (
-                <div className="w-full overflow-x-auto my-6 rounded-lg border border-[#1E3550] bg-[#0d1520]/20 backdrop-blur-sm">
-                  <table className="w-full text-sm text-left border-collapse table-auto min-w-125">
+                <div className="w-full overflow-x-auto my-6 rounded-lg border border-[#1E3550] bg-[#0d1520]/40 backdrop-blur-sm">
+                  <table className="w-full text-sm text-left border-collapse table-auto min-w-150">
                     {children}
                   </table>
                 </div>
@@ -108,10 +134,10 @@ export default function MarkdownRenderer({
               return <thead className="bg-[#0d2035] text-[#C8D9E6] border-b border-[#1E3550]">{children}</thead>;
             },
             tbody({ children }) {
-              return <tbody className="divide-y divide-[#1E3550]">{children}</tbody>;
+              return <tbody className="divide-y divide-[#1E3550] bg-transparent">{children}</tbody>;
             },
             tr({ children }) {
-              return <tr className="hover:bg-[#1E3550]/20 transition-colors">{children}</tr>;
+              return <tr className="hover:bg-[#1E3550]/10 transition-colors">{children}</tr>;
             },
             th({ children }) {
               return (
@@ -129,7 +155,7 @@ export default function MarkdownRenderer({
             },
           }}
         >
-          {processedContent}
+          {cleanContent}
         </ReactMarkdown>
       </div>
     </div>
