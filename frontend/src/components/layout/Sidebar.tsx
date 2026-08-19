@@ -195,7 +195,9 @@ export default function Sidebar({
         {!collapsed && (
           <div className="transition-opacity duration-200">
             {sessionsLoading ? (
-              <p className="text-xs text-[#8e8e93] px-3 py-2">Loading history...</p>
+              <p className="text-xs text-[#8e8e93] px-3 py-2">
+                Loading history...
+              </p>
             ) : (
               <>
                 {conversations.length > 0 && (
