@@ -1,6 +1,6 @@
 import { cn } from "../../utils/utils";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // 👈 Crucial import
+import remarkGfm from "remark-gfm"; 
 import CodeBlock from "./CodeBlock";
 
 interface MarkdownRendererProps {
@@ -12,18 +12,24 @@ export default function MarkdownRenderer({
   content,
   className,
 }: MarkdownRendererProps) {
+  
+  // 1. Cleans up literal "<br>" strings and formats them into clean newlines
+  const processedContent = content
+    ? content.replace(/<br\s*\/?>/gi, "\n")
+    : "";
+
   return (
-    <div className="w-full max-w-full overflow-hidden">
-      <div className={cn("text-[15px] leading-7 tracking-normal w-full wrap-break-words whitespace-pre-line", className)}>
+    <div className="w-full max-w-full overflow-hidden block">
+      <div className={cn("text-[15px] leading-7 tracking-normal w-full wrap-break-words whitespace-pre-wrap", className)}>
         <ReactMarkdown
-          remarkPlugins={[remarkGfm]} // 👈 Tells react-markdown to parse table structures
+          remarkPlugins={[remarkGfm]} 
           components={{
             code({ className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || "");
               if (!match) {
                 return (
                   <code
-                    className="bg-[#0d1520] text-[#8bc9d8] px-1.5 py-0.5 rounded text-[13px] font-mono border border-[#1e3550] inline-block max-w-full break-all whitespace-normal"
+                    className="bg-[#0d1520] text-[#8bc9d8] px-1.5 py-0.5 rounded text-[13px] font-mono border border-[#1e3550] inline break-all whitespace-normal"
                     {...props}
                   >
                     {children}
@@ -32,7 +38,7 @@ export default function MarkdownRenderer({
               }
               return (
                 <CodeBlock
-                  language={match[1]}
+                  language={match[1]} // Safe match index parsing
                   code={String(children).replace(/\n$/, "")}
                 />
               );
@@ -88,11 +94,11 @@ export default function MarkdownRenderer({
             hr() {
               return <hr className="border-[#1E3550] my-5" />;
             },
-            // --- Table handling ---
+            // --- Validated Table Handling Setup ---
             table({ children }) {
               return (
-                <div className="w-full overflow-x-auto my-6 rounded-lg border border-[#1E3550] shadow-sm">
-                  <table className="w-full text-sm text-left border-collapse table-auto min-w-150">
+                <div className="w-full overflow-x-auto my-6 rounded-lg border border-[#1E3550] bg-[#0d1520]/20 backdrop-blur-sm">
+                  <table className="w-full text-sm text-left border-collapse table-auto min-w-125">
                     {children}
                   </table>
                 </div>
@@ -102,10 +108,10 @@ export default function MarkdownRenderer({
               return <thead className="bg-[#0d2035] text-[#C8D9E6] border-b border-[#1E3550]">{children}</thead>;
             },
             tbody({ children }) {
-              return <tbody className="divide-y divide-[#1E3550] bg-transparent">{children}</tbody>;
+              return <tbody className="divide-y divide-[#1E3550]">{children}</tbody>;
             },
             tr({ children }) {
-              return <tr className="hover:bg-[#0d1520]/30 transition-colors">{children}</tr>;
+              return <tr className="hover:bg-[#1E3550]/20 transition-colors">{children}</tr>;
             },
             th({ children }) {
               return (
@@ -123,7 +129,7 @@ export default function MarkdownRenderer({
             },
           }}
         >
-          {content}
+          {processedContent}
         </ReactMarkdown>
       </div>
     </div>
