@@ -120,8 +120,10 @@ export default function ChatScreen() {
       setMessages((prev) => [...prev, assistantMessage]);
 
       if (messages.length === 0) {
-        const updatedSessions = await getSessions(token);
-        setSessions(updatedSessions);
+        setTimeout(async () => {
+          const updatedSessions = await getSessions(token);
+          setSessions(updatedSessions);
+        }, 2000);
       }
     } catch (error) {
       console.error("Failed to send message:", error);

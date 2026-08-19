@@ -187,7 +187,10 @@ function preProcessMarkdown(rawContent: string): string {
  * back into real <br/> elements, without touching react-markdown's own
  * element tree or resorting to raw HTML injection.
  * ──────────────────────────────────────────────────────────────────────── */
-function insertLineBreaks(node: React.ReactNode, keyPrefix = "lb"): React.ReactNode {
+function insertLineBreaks(
+  node: React.ReactNode,
+  keyPrefix = "lb",
+): React.ReactNode {
   if (typeof node === "string") {
     if (!node.includes(LINE_BREAK)) return node;
     const parts = node.split(LINE_BREAK);
@@ -199,13 +202,15 @@ function insertLineBreaks(node: React.ReactNode, keyPrefix = "lb"): React.ReactN
     return result;
   }
   if (Array.isArray(node)) {
-    return node.map((child, idx) => insertLineBreaks(child, `${keyPrefix}-${idx}`));
+    return node.map((child, idx) =>
+      insertLineBreaks(child, `${keyPrefix}-${idx}`),
+    );
   }
   if (React.isValidElement(node) && (node.props as any)?.children != null) {
     return React.cloneElement(
       node,
       undefined,
-      insertLineBreaks((node.props as any).children, keyPrefix)
+      insertLineBreaks((node.props as any).children, keyPrefix),
     );
   }
   return node;
@@ -254,7 +259,7 @@ function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
       <div
         className={cn(
           "text-[15px] leading-7 tracking-normal w-full wrap-break-words whitespace-pre-wrap text-[#C8D9E6]",
-          className
+          className,
         )}
       >
         <MarkdownErrorBoundary content={content}>
@@ -323,7 +328,11 @@ function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
                 );
               },
               strong({ children }) {
-                return <strong className="text-white font-semibold">{children}</strong>;
+                return (
+                  <strong className="text-white font-semibold">
+                    {children}
+                  </strong>
+                );
               },
               blockquote({ children }) {
                 return (
@@ -352,10 +361,18 @@ function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
                 );
               },
               tbody({ children }) {
-                return <tbody className="divide-y divide-[#1E3550] bg-transparent">{children}</tbody>;
+                return (
+                  <tbody className="divide-y divide-[#1E3550] bg-transparent">
+                    {children}
+                  </tbody>
+                );
               },
               tr({ children }) {
-                return <tr className="hover:bg-[#1E3550]/10 transition-colors">{children}</tr>;
+                return (
+                  <tr className="hover:bg-[#1E3550]/10 transition-colors">
+                    {children}
+                  </tr>
+                );
               },
               th({ children }) {
                 return (
