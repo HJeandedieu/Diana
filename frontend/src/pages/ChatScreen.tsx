@@ -116,14 +116,24 @@ export default function ChatScreen() {
         content,
         token,
       );
-      latestMessageId.current = assistantMessage.id;
-      setMessages((prev) => [...prev, assistantMessage]);
 
-      if (messages.length === 0) {
-        setTimeout(async () => {
-          const updatedSessions = await getSessions(token);
-          setSessions(updatedSessions);
-        }, 2000);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: assistantMessage.id,
+          role: assistantMessage.role,
+          content: assistantMessage.content,
+        },
+      ]);
+
+      if (assistantMessage.sessionTitle && messages.length === 0) {
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.id === activeConversation
+              ? { ...s, title: assistantMessage.sessionTitle! }
+              : s,
+          ),
+        );
       }
     } catch (error) {
       console.error("Failed to send message:", error);

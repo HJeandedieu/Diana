@@ -30,7 +30,12 @@ export interface AuthResponse {
 
 export interface SendMessageResponse {
   success: boolean;
-  data: Message;
+  data: {
+    id: string;
+    role: "assistant";
+    content: string;
+    sessionTitle?: string;
+  };
 }
 
 export interface Memory {
