@@ -4,7 +4,7 @@
 
 **The AI companion that remembers.**
 
-*A memory-aware assistant built for developers who are tired of re-explaining everything, every time.*
+_A memory-aware assistant built for developers who are tired of re-explaining everything, every time._
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
 ![Status](https://img.shields.io/badge/status-in--development-blueviolet)
@@ -26,13 +26,13 @@ She remembers your projects, your decisions, your style — and picks up exactly
 
 ## What She Does
 
-| | |
-|---|---|
-| **Persistent Memory** | Retains context across sessions — no more déjà vu conversations |
-| **Context-Aware Chat** | Conversations build on real history, not a blank slate |
-| **Coding Assistant** | Debugs, reviews, explains, and architects alongside you |
-| **Project Guidance** | Helps plan, choose tech, and stay on the best path forward |
-| **Built to Scale** | Distributed architecture designed for real growth |
+|                        |                                                                 |
+| ---------------------- | --------------------------------------------------------------- |
+| **Persistent Memory**  | Retains context across sessions — no more déjà vu conversations |
+| **Context-Aware Chat** | Conversations build on real history, not a blank slate          |
+| **Coding Assistant**   | Debugs, reviews, explains, and architects alongside you         |
+| **Project Guidance**   | Helps plan, choose tech, and stay on the best path forward      |
+| **Built to Scale**     | Distributed architecture designed for real growth               |
 
 ---
 
@@ -49,14 +49,14 @@ She remembers your projects, your decisions, your style — and picks up exactly
                        └──────────────┘
 ```
 
-| Layer | Stack |
-|---|---|
-| **Frontend** | React · TypeScript · CSS Modules |
-| **Backend** | Node.js · Express · Prisma |
-| **AI Service** | Python · FastAPI · OpenAI API |
-| **Database** | PostgreSQL |
-| **Infra** | Docker · Docker Compose |
-| **Auth** | JWT |
+| Layer          | Stack                            |
+| -------------- | -------------------------------- |
+| **Frontend**   | React · TypeScript · CSS Modules |
+| **Backend**    | Node.js · Express · Prisma       |
+| **AI Service** | Python · FastAPI · OpenAI API    |
+| **Database**   | PostgreSQL                       |
+| **Infra**      | Docker · Docker Compose          |
+| **Auth**       | JWT                              |
 
 ---
 

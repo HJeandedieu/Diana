@@ -34,17 +34,17 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
   });
 
   if (messageCount === 1) {
-  const titleResponse = await axios.post(
-    `${AI_SERVICE_API_URL}/generate-title`,
-    { message, memories: [], history: [] }
-  );
-  const title = titleResponse.data.response;
+    const titleResponse = await axios.post(
+      `${AI_SERVICE_API_URL}/generate-title`,
+      { message, memories: [], history: [] },
+    );
+    const title = titleResponse.data.response;
 
-  await prisma.session.update({
-    where: { id: session.id },
-    data: { title }
-  });
-}
+    await prisma.session.update({
+      where: { id: session.id },
+      data: { title },
+    });
+  }
 
   const userMemories = await prisma.memory.findMany({
     where: { userId },
