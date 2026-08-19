@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { loginUser } from "../services/authService";
-import login from "../assets/Login.svg";
+import login from "../assets/login.svg";
 import logo from "../assets/logo.svg";
 import mail from "../assets/mail.svg";
 import lock from "../assets/lock.svg";
