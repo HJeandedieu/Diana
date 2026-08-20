@@ -33,18 +33,27 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
     where: { sessionId: session.id },
   });
 
-  if (messageCount === 1) {
+let updatedTitle = null;
+
+if (messageCount === 1) {
+  try {
     const titleResponse = await axios.post(
       `${AI_SERVICE_API_URL}/generate-title`,
-      { message, memories: [], history: [] },
+      { message, memories: [], history: [] }
     );
-    const title = titleResponse.data.response;
-
+    updatedTitle = titleResponse.data.response || message.slice(0, 40);
     await prisma.session.update({
       where: { id: session.id },
-      data: { title },
+      data: { title: updatedTitle }
+    });
+  } catch {
+    updatedTitle = message.slice(0, 40);
+    await prisma.session.update({
+      where: { id: session.id },
+      data: { title: updatedTitle }
     });
   }
+}
 
   const userMemories = await prisma.memory.findMany({
     where: { userId },
@@ -107,5 +116,5 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
       content: responseText,
     },
   });
-  return responseText;
+  return { response: responseText, title: updatedTitle };
 };

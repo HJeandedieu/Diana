@@ -21,6 +21,9 @@ export const getUserSessions = async ({ userId }) => {
     where: {
       userId: userId,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return sessions;

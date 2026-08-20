@@ -5,7 +5,7 @@ const getMessage = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { sessionId, message } = req.body;
-    const response = await fetchChatResponse({ userId, sessionId, message });
+    const { response, title } = await fetchChatResponse({ userId, sessionId, message });
 
     res.status(200).json({
       success: true,
@@ -13,6 +13,7 @@ const getMessage = async (req, res, next) => {
         id: randomUUID(),
         role: "assistant",
         content: response,
+        sessionTitle: title,
       },
     });
   } catch (error) {
