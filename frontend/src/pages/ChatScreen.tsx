@@ -3,6 +3,7 @@ import {
   createSession,
   getSessions,
   getSessionMessages,
+  updateSessionTitle,
 } from "../services/sessionService";
 import { useState, useEffect, useRef } from "react";
 import { cn } from "../utils/utils";
@@ -99,6 +100,31 @@ export default function ChatScreen() {
     }
   }
 
+  async function handleRename(id: string, newTitle: string) {
+    // Optimistic update
+    setSessions((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, title: newTitle } : s)),
+    );
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      await updateSessionTitle(id, newTitle, token);
+    } catch (error) {
+      console.error("Failed to rename session:", error);
+      // Revert on failure
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const fresh = await getSessions(token);
+          setSessions(fresh);
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
   async function onSendHandler() {
     if (!message.trim() || loading || !activeConversation) return;
 
@@ -187,6 +213,7 @@ export default function ChatScreen() {
         onConversationSelect={handleConversationSelect}
         onNewChat={handleNewChat}
         sessionsLoading={sessionsLoading}
+        onRename={handleRename}
       />
 
       <section

@@ -19,6 +19,7 @@ interface SidebarProps extends HTMLAttributes<HTMLElement> {
   user?: User;
   onProfileClick?: () => void;
   sessionsLoading?: boolean;
+  onRename?: (id: string, newTitle: string) => void;
 }
 
 export default function Sidebar({
@@ -31,6 +32,7 @@ export default function Sidebar({
   onProfileClick,
   className,
   sessionsLoading,
+  onRename,
   ...props
 }: SidebarProps) {
   const navigate = useNavigate();
@@ -210,6 +212,7 @@ export default function Sidebar({
                     conversations={conversations}
                     activeConversation={activeConversation}
                     onSelect={onConversationSelect}
+                    onRename={onRename}
                   />
                 </div>
               </>

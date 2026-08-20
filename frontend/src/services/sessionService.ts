@@ -57,3 +57,25 @@ export async function getSessionMessages(
   const result = await response.json();
   return result.data;
 }
+
+export async function updateSessionTitle(
+  sessionId: string,
+  title: string,
+  token: string,
+): Promise<Session> {
+  const response = await fetch(`${API_URL}/sessions/${sessionId}/rename`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update session title");
+  }
+
+  const result = await response.json();
+  return result.data;
+}

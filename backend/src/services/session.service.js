@@ -50,3 +50,23 @@ export const getSessionMessages = async ({ userId, sessionId }) => {
 
   return messages;
 };
+
+export const updateSessionTitle = async ({ userId, sessionId, title }) => {
+  const session = await prisma.session.findFirst({
+    where: {
+      id: sessionId,
+      userId: userId,
+    },
+  });
+
+  if (!session) {
+    throw new NotFoundError("Session not found");
+  }
+
+  const updated = await prisma.session.update({
+    where: { id: sessionId },
+    data: { title },
+  });
+
+  return updated;
+};
