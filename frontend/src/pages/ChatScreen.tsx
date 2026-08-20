@@ -118,10 +118,6 @@ export default function ChatScreen() {
         token,
       );
 
-      console.log("Assistant message full:", assistantMessage);
-      console.log("isFirstMessage:", isFirstMessage);
-      console.log("sessionTitle:", assistantMessage.sessionTitle);
-
       setMessages((prev) => [
         ...prev,
         {
@@ -131,8 +127,8 @@ export default function ChatScreen() {
         },
       ]);
 
+      // Update session title in sidebar when first message is sent
       if (assistantMessage.sessionTitle && isFirstMessage) {
-        console.log("Setting title:", assistantMessage.sessionTitle);
         setSessions((prev) =>
           prev.map((s) =>
             s.id === activeConversation

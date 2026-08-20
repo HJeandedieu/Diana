@@ -213,7 +213,7 @@ export default function ProfileScreen() {
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-1.5 h-1.5 rounded-full bg-[#567C8D] shrink-0" />
                       <span className="text-sm text-[#C8D9E6] truncate">
-                        {session.title}
+                        {session.title || "New Chat"}
                       </span>
                     </div>
                     <span className="text-[10px] text-[#3d5566] shrink-0 ml-4">

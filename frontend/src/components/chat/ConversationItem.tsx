@@ -23,7 +23,7 @@ export default function ConversationItem({
           : "text-[#C8D9E6] hover:bg-[#162B43]",
       )}
     >
-      <p className="truncate">{conversation.title}</p>
+      <p className="truncate">{conversation.title || "New Chat"}</p>
     </div>
   );
 }
