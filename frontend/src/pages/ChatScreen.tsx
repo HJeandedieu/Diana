@@ -96,6 +96,7 @@ export default function ChatScreen() {
     if (!message.trim() || loading || !activeConversation) return;
 
     const content = message.trim();
+    const isFirstMessage = messages.length === 0; // capture BEFORE state update
 
     const newMessage: Message = {
       id: crypto.randomUUID(),
@@ -126,7 +127,7 @@ export default function ChatScreen() {
         },
       ]);
 
-      if (assistantMessage.sessionTitle && messages.length === 0) {
+      if (assistantMessage.sessionTitle && isFirstMessage) {
         setSessions((prev) =>
           prev.map((s) =>
             s.id === activeConversation
