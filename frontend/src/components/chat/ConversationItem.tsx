@@ -15,23 +15,9 @@ export default function ConversationItem({
   onClick,
   onRename,
 }: ConversationItemProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(conversation.title || "New Chat");
   const inputRef = useRef<HTMLInputElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Close menu on outside click
-  useEffect(() => {
-    if (!menuOpen) return;
-    function handleClick(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [menuOpen]);
 
   // Focus input when editing starts
   useEffect(() => {
@@ -49,7 +35,6 @@ export default function ConversationItem({
       setEditValue(conversation.title || "New Chat");
     }
     setEditing(false);
-    setMenuOpen(false);
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -59,12 +44,10 @@ export default function ConversationItem({
     } else if (e.key === "Escape") {
       setEditValue(conversation.title || "New Chat");
       setEditing(false);
-      setMenuOpen(false);
     }
   }
 
   function handleRenameClick() {
-    setMenuOpen(false);
     setEditing(true);
   }
 
@@ -101,61 +84,26 @@ export default function ConversationItem({
         >
           <p className="truncate text-sm">{conversation.title || "New Chat"}</p>
 
-          {/* 3-dot menu button */}
+          {/* Edit/pencil icon button */}
           <span
             role="button"
             tabIndex={0}
             onClick={(e) => {
               e.stopPropagation();
-              setMenuOpen((prev) => !prev);
+              handleRenameClick();
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.stopPropagation();
-                setMenuOpen((prev) => !prev);
+                handleRenameClick();
               }
             }}
             className={cn(
               "shrink-0 p-0.5 rounded transition-colors",
-              "opacity-0 group-hover:opacity-100",
+              "opacity-0 group-hover:opacity-100 hover:opacity-100",
               active ? "hover:bg-white/10" : "hover:bg-[#243B55]",
-              menuOpen && "opacity-100",
             )}
-            aria-label="Conversation options"
-          >
-            {/* 3-dot SVG icon */}
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="8" cy="3" r="1.5" fill="currentColor" />
-              <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-              <circle cx="8" cy="13" r="1.5" fill="currentColor" />
-            </svg>
-          </span>
-        </button>
-      )}
-
-      {/* Dropdown menu */}
-      {menuOpen && (
-        <div
-          ref={menuRef}
-          className={cn(
-            "absolute right-2 top-full z-50 mt-1",
-            "bg-[#0d2035] border border-[#1E3550] rounded-lg shadow-lg",
-            "py-1 min-w-[120px]",
-          )}
-        >
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRenameClick();
-            }}
-            className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-[#C8D9E6] hover:bg-[#162B43] transition-colors text-left"
+            aria-label="Rename conversation"
           >
             {/* Pencil/edit SVG icon */}
             <svg
@@ -171,10 +119,11 @@ export default function ConversationItem({
               <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
               <path d="m15 5 4 4" />
             </svg>
-            Rename
-          </button>
-        </div>
+          </span>
+        </button>
       )}
+
+
     </div>
   );
 }
