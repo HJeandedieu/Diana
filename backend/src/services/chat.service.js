@@ -3,6 +3,47 @@ import prisma from "../lib/prisma.js";
 import { AppError, NotFoundError, BadRequestError } from "../utils/error.js";
 import { AI_SERVICE_API_URL } from "../env.js";
 
+// Helper: generate a safe fallback title from a message
+function generateFallbackTitle(message) {
+  if (!message) return "New Chat";
+  const cleaned = message.replace(/[#*_`~\[\]]/g, "").trim();
+  if (cleaned.length === 0) return "New Chat";
+  return cleaned.length > 50 ? cleaned.slice(0, 50) : cleaned;
+}
+
+// Helper: update session title in DB (never throws)
+async function saveSessionTitle(sessionId, title) {
+  try {
+    await prisma.session.update({
+      where: { id: sessionId },
+      data: { title },
+    });
+    return true;
+  } catch (err) {
+    console.error(`[Title] Failed to save title to DB for session ${sessionId}:`, err.message);
+    return false;
+  }
+}
+
+// Helper: try AI title generation (never throws)
+async function generateAITitle(message) {
+  try {
+    const titleResponse = await axios.post(
+      `${AI_SERVICE_API_URL}/generate-title`,
+      { message, memories: [], history: [] },
+      { timeout: 10000 }
+    );
+    const aiTitle = titleResponse.data?.response?.trim();
+    if (aiTitle && aiTitle.length > 0) {
+      return aiTitle;
+    }
+    return null;
+  } catch (err) {
+    console.error("[Title] AI title generation failed:", err.message);
+    return null;
+  }
+}
+
 export const fetchChatResponse = async ({ userId, sessionId, message }) => {
   const session = await prisma.session.findFirst({
     where: {
@@ -16,7 +57,7 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
     throw error;
   }
 
-  if (!message || message.trim().length < 0) {
+  if (!message || message.trim().length < 1) {
     const error = new BadRequestError("Message can not be empty");
     throw error;
   }
@@ -33,27 +74,27 @@ export const fetchChatResponse = async ({ userId, sessionId, message }) => {
     where: { sessionId: session.id },
   });
 
-let updatedTitle = null;
+  let updatedTitle = null;
 
-if (messageCount === 1) {
-  try {
-    const titleResponse = await axios.post(
-      `${AI_SERVICE_API_URL}/generate-title`,
-      { message, memories: [], history: [] }
-    );
-    updatedTitle = titleResponse.data.response || message.slice(0, 40);
-    await prisma.session.update({
-      where: { id: session.id },
-      data: { title: updatedTitle }
-    });
-  } catch {
-    updatedTitle = message.slice(0, 40);
-    await prisma.session.update({
-      where: { id: session.id },
-      data: { title: updatedTitle }
-    });
+  // Generate title if this is the first message OR if the title is still default/empty
+  const needsTitle =
+    messageCount === 1 ||
+    !session.title ||
+    session.title === "New Chat" ||
+    session.title.trim() === "";
+
+  if (needsTitle) {
+    // Layer 1: Try AI title generation
+    const aiTitle = await generateAITitle(message);
+    if (aiTitle) {
+      updatedTitle = aiTitle;
+    } else {
+      // Layer 2: Fallback to message content
+      updatedTitle = generateFallbackTitle(message);
+    }
+    // Always save — this call never throws
+    await saveSessionTitle(session.id, updatedTitle);
   }
-}
 
   const userMemories = await prisma.memory.findMany({
     where: { userId },

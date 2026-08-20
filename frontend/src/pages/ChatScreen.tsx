@@ -15,6 +15,13 @@ import type { Message, Session } from "../types";
 
 import ThinkingIndicator from "../components/chat/ThinkingIndicator";
 
+// Generate a client-side fallback title from the first message
+function generateClientTitle(msg: string): string {
+  const cleaned = msg.replace(/[#*_`~[\]]/g, "").trim();
+  if (cleaned.length === 0) return "New Chat";
+  return cleaned.length > 50 ? cleaned.slice(0, 50) : cleaned;
+}
+
 export default function ChatScreen() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeConversation, setActiveConversation] = useState<string | null>(
@@ -127,15 +134,28 @@ export default function ChatScreen() {
         },
       ]);
 
-      // Update session title in sidebar when first message is sent
-      if (assistantMessage.sessionTitle && isFirstMessage) {
+      // Update session title in sidebar
+      // Use backend title if available, otherwise generate client-side
+      const newTitle = assistantMessage.sessionTitle || generateClientTitle(content);
+      if (isFirstMessage) {
         setSessions((prev) =>
           prev.map((s) =>
             s.id === activeConversation
-              ? { ...s, title: assistantMessage.sessionTitle! }
+              ? { ...s, title: newTitle }
               : s,
           ),
         );
+      }
+
+      // After the first message, refresh sessions from DB to get the server-generated title
+      // This ensures the sidebar always has the latest title from the database
+      if (isFirstMessage) {
+        try {
+          const refreshedSessions = await getSessions(token);
+          setSessions(refreshedSessions);
+        } catch {
+          // Silently fail — the client-side fallback title is already showing
+        }
       }
     } catch (error) {
       console.error("Failed to send message:", error);

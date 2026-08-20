@@ -35,18 +35,25 @@ def generate_response(request: Request):
 
 @chat_router.post("/generate-title")
 def generate_title(request: Request):
-    response = client.chat.completions.create(
-        model=settings.GROQ_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "Generate a short, concise title (max 5 words) for a conversation that starts with this message. Return only the title, nothing else. No quotes, no punctuation at the end."
-            },
-            {
-                "role": "user",
-                "content": request.message
-            }
-        ],
-        max_tokens=20
-    )
-    return Response(response=response.choices[0].message.content.strip())
+    try:
+        response = client.chat.completions.create(
+            model=settings.GROQ_MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Generate a short, concise title (max 5 words) for a conversation that starts with this message. Return only the title, nothing else. No quotes, no punctuation at the end."
+                },
+                {
+                    "role": "user",
+                    "content": request.message
+                }
+            ],
+            max_tokens=20
+        )
+        title = response.choices[0].message.content
+        if title:
+            title = title.strip().strip('"').strip("'").strip(".")
+        return Response(response=title or request.message[:40])
+    except Exception as e:
+        print(f"[Title] Error generating title: {e}")
+        return Response(response=request.message[:40])
