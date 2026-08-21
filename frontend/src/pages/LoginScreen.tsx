@@ -5,9 +5,6 @@ import login from "../assets/login.svg";
 import logo from "../assets/logo.svg";
 import mail from "../assets/mail.svg";
 import lock from "../assets/lock.svg";
-import google from "../assets/google.svg";
-import apple from "../assets/apple.svg";
-import github from "../assets/github.svg";
 import "../index.css";
 const Login = () => {
   const navigate = useNavigate();
@@ -130,34 +127,7 @@ const Login = () => {
                 {loading ? "Signing in..." : "Sign in"}
               </button>
 
-              {/* Authenticators */}
-              <div className="flex gap-2 justify-center items-center my-3">
-                <div className="h-px w-20 bg-muted"></div>
-                <span className="text-sm">or continue with</span>
-                <div className="h-px w-20 bg-muted"></div>
-              </div>
 
-              {/* Buttons */}
-              <div className="flex justify-between">
-                <Link
-                  className="px-8 py-3 border border-border rounded-lg bg-button-muted"
-                  to="#"
-                >
-                  <img className="w-6" src={google} draggable="false" />
-                </Link>
-                <Link
-                  className="px-8 py-3 border border-border rounded-lg bg-button-muted"
-                  to="#"
-                >
-                  <img className="w-6" src={apple} draggable="false" />
-                </Link>
-                <Link
-                  className="px-8 py-3 border border-border rounded-lg bg-button-muted"
-                  to="#"
-                >
-                  <img className="w-6" src={github} draggable="false" />
-                </Link>
-              </div>
             </div>
           </form>
           <span className="flex gap-1 justify-center text-sm my-4">
