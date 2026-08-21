@@ -269,7 +269,7 @@ export default function Sidebar({
         {!collapsed && (
           <button
             type="button"
-            onClick={logout}
+            onClick={() => logout(navigate)}
             className="w-full flex items-center gap-2.5 px-2 py-1.5 mt-0.5 rounded-lg text-left text-[11px] text-[#3d5566] hover:text-red-400 hover:bg-[#0d2035] transition-all"
           >
             <svg

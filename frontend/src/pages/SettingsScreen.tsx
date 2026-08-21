@@ -113,7 +113,7 @@ export default function SettingsScreen() {
     setDeleteLoading(true);
     try {
       await deleteAccount(token);
-      logout();
+      logout(navigate);
     } catch {
       setDeleteLoading(false);
     }
