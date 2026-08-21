@@ -144,7 +144,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex justify-center bg-button rounded-full mx-[10%] px-2 py-2 my-4"
+                className="flex justify-center w-[80%] bg-button rounded-full mx-[10%] px-2 py-2 my-4 disabled:opacity-50"
               >
                 {loading ? "Creating account..." : "Sign Up"}
               </button>
