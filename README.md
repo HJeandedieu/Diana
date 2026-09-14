@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌙 Diana
+# Diana
 
 **The AI companion that remembers.**
 
@@ -109,6 +109,6 @@ Diana was built solo by **RedBlue** for the **Stardance Challenge**, with AI too
 
 <div align="center">
 
-**License:** MIT &nbsp;·&nbsp; **Demo:** Coming Soon &nbsp;·&nbsp; **Author:** [RedBlue](https://github.com/hjeandedieu)
+**License:** MIT &nbsp;·&nbsp; **Demo:** [Demo](https://diana-six-theta.vercel.app/) &nbsp;·&nbsp; **Author:** [RedBlue](https://github.com/hjeandedieu)
 
 </div>
